@@ -1,5 +1,7 @@
 # Catalyst
 
+[![Build Status](https://travis-ci.org/acmcarther/catalyst.svg?branch=master)](https://travis-ci.org/acmcarther/catalyst)
+
 Catalyst is a small bot to automate your Github workflow. It's purpose is to take
 care of the monotonous aspects of merging feature branches back into the main
 development branch. This includes identifying peer reviewers, monitoring
