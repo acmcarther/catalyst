@@ -9,6 +9,9 @@ continuous integration, and autmatically handling merging branches back in. It
 also takes care of batching commits on your development branch into releases
 to a production branch if you so choose.
 
+## Immediate TODOS:
+Complete and integrate https://github.com/acmcarther/github_v3_rust
+
 ## Contributing
 
 1. Fork it ( http://github.com/acmcarther/catalyst/fork )
