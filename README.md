@@ -10,6 +10,9 @@ into releases to a production branch if you so choose.
 ## Immediate TODOS:
 Complete and integrate https://github.com/acmcarther/github_v3_rust
 
+## Demo bot
+[pt-195](https://github.com/pt-195)
+
 ## Contributing
 
 1. Fork it ( http://github.com/acmcarther/catalyst/fork )
