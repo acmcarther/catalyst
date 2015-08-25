@@ -1,4 +1,4 @@
-extern crate hyper;
+extern crate github_v3;
 
 mod listening;
 mod sending;
