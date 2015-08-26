@@ -17,6 +17,13 @@ fn handle_root(req: &mut Request) -> IronResult<Response> {
   Ok(Response::with((status::Ok, "cheapassbox.com rust + iron & soon catalyst")))
 }
 
+
+fn handle_webhooks(req: &mut Request) -> IronResult<Response> {
+  println!("webhook hit {:?}", req);
+  Ok(Response::with((status::Ok, "")))
+}
+
+
 fn main() {
   let token = std::env::var("CATALYST_GITHUB_OAUTH_TOKEN").unwrap();
   let repo_owner = std::env::var("CATALYST_REPO_OWNER").unwrap();
@@ -25,6 +32,7 @@ fn main() {
   let mut router = Router::new();
 
   router.get("/", handle_root);
+  router.get("/github_webhooks", handle_webhooks);
 
   //listening::start_listener(token, repo_owner, repo_name)
   Iron::new(router).http("localhost:8080").unwrap();
