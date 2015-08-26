@@ -4,4 +4,10 @@ version = "0.1.0"
 authors = ["Alex McArther <acmcarther@gmail.com>"]
 
 [dependencies]
-hyper = "0.6.10"
+iron = "*"
+time = "*"
+router = "*"
+
+[dependencies.github_v3]
+git = "https://github.com/acmcarther/github_v3_rust"
+rev = "07dde2a"
