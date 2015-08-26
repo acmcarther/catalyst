@@ -14,7 +14,7 @@ use std::env::args;
 use std::path::PathBuf;
 
 fn handle_root(req: &mut Request) -> IronResult<Response> {
-  Ok(Response::with((status::Ok, "Hello World!")))
+  Ok(Response::with((status::Ok, "cheapassbox.com rust + iron & soon catalyst")))
 }
 
 fn main() {
@@ -27,9 +27,5 @@ fn main() {
   router.get("/", handle_root);
 
   //listening::start_listener(token, repo_owner, repo_name)
-  if args().next() == Some("https".to_owned()) {
-    Iron::new(router).https("localhost:8080", PathBuf::from("~/.ssl/cert".to_owned()), PathBuf::from("~/.ssl/key".to_owned())).unwrap();
-  } else {
-    Iron::new(router).http("localhost:8080").unwrap();
-  }
+  Iron::new(router).http("localhost:8080").unwrap();
 }
