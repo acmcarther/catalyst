@@ -13,7 +13,6 @@ mod listening {
   use github_v3::issue_comment_types::{IssueComment, CreateComment};
 
   pub fn start_listener(token: String, repo_owner: String, repo_name: String) {
-
     let client = GithubClient::new(Some(Authorization("token ".to_owned() + &token)));
     loop {
       let repo = Repository{ owner: repo_owner.clone(), repo_name: repo_name.clone() };
