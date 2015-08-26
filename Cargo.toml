@@ -7,7 +7,8 @@ authors = ["Alex McArther <acmcarther@gmail.com>"]
 iron = "*"
 time = "*"
 router = "*"
+rustc-serialize = "0.3.16"
 
 [dependencies.github_v3]
 git = "https://github.com/acmcarther/github_v3_rust"
-rev = "07dde2a"
+rev = "eaa1710"
