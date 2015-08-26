@@ -11,4 +11,4 @@ rustc-serialize = "0.3.16"
 
 [dependencies.github_v3]
 git = "https://github.com/acmcarther/github_v3_rust"
-rev = "060154d"
+rev = "77115cc"
