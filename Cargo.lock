@@ -2,7 +2,7 @@
 name = "catalyst"
 version = "0.1.0"
 dependencies = [
- "github_v3 0.1.0 (git+https://github.com/acmcarther/github_v3_rust?rev=060154d)",
+ "github_v3 0.1.0 (git+https://github.com/acmcarther/github_v3_rust?rev=1b3554c)",
  "iron 0.1.21 (registry+https://github.com/rust-lang/crates.io-index)",
  "router 0.0.14 (registry+https://github.com/rust-lang/crates.io-index)",
  "rustc-serialize 0.3.16 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -63,7 +63,7 @@ dependencies = [
 [[package]]
 name = "github_v3"
 version = "0.1.0"
-source = "git+https://github.com/acmcarther/github_v3_rust?rev=060154d#060154d3fb84f9faa649e86590209caec806ba5e"
+source = "git+https://github.com/acmcarther/github_v3_rust?rev=1b3554c#1b3554c1284c881b35a9a810edc9a088180817be"
 dependencies = [
  "hyper 0.6.10 (registry+https://github.com/rust-lang/crates.io-index)",
  "rustc-serialize 0.3.16 (registry+https://github.com/rust-lang/crates.io-index)",

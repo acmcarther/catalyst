@@ -31,7 +31,6 @@ use github_v3::event_types::{
   PullRequestReviewCommentEventType,
   PullRequestReviewCommentEvent,
   PushEvent,
-  Pusher,
   PushCommit,
 };
 
