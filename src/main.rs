@@ -69,6 +69,7 @@ fn handle_webhooks(req: &mut Request) -> IronResult<Response> {
   println!("webhook hit {:?}", req);
   let mut payload = String::new();
   req.body.read_to_string(&mut payload).unwrap();
+  println!("full payload {}", payload);
 
   let event_header = req.headers.get::<GithubEventHeader>();
   match event_header {
