@@ -1,15 +1,26 @@
 extern crate github_v3;
+extern crate iron;
 extern crate time;
+extern crate router;
 extern crate rustc_serialize;
-#[macro_use]
-extern crate hyper;
 
 mod listening;
 mod sending;
 mod state;
 
+use iron::prelude::*;
+use iron::status;
+use router::Router;
+use std::env::args;
+use std::path::PathBuf;
+use iron::headers::{parsing, Header, HeaderFormatter, HeaderFormat};
+use iron::error::HttpError;
 
 use std::io::Read;
+
+use std::fmt;
+use std::ascii::AsciiExt;
+use std::convert::From;
 
 use github_v3::types::{GitErr};
 use github_v3::event_types::{
@@ -27,113 +38,33 @@ use rustc_serialize::{json};
 use rustc_serialize::json::DecoderError;
 use std::sync::mpsc::{channel, Sender};
 
-use hyper::Server;
-use hyper::server::{
-  Request,
-  Response
-};
-use hyper::status::StatusCode;
-use hyper::net::Fresh;
-use hyper::uri::RequestUri;
+use iron::{BeforeMiddleware, AfterMiddleware, typemap};
 
-use hyper::header::{HeaderFormat, Header};
-use hyper::error::Error as HttpError;
-use hyper::header::parsing;
+fn handle_root(req: &mut Request) -> IronResult<Response> {
+  Ok(Response::with((status::Ok, "cheapassbox.com rust + iron & soon catalyst")))
+}
 
-fn receive_payload(event_type: EventType, payload_str: String) {
-  match event_type {
-    EventType::IssueComment => {
-      let result = json::decode::<IssueCommentEvent>(&payload_str).unwrap();
-      println!("issue comment {:?}", result);
-    },
-    EventType::PullRequestReviewComment => {
-      let result = json::decode::<PullRequestReviewCommentEvent>(&payload_str).unwrap();
-      println!("pull request review comment {:?}", result);
-    },
-    EventType::PullRequest => {
-      let result = json::decode::<PullRequestEvent>(&payload_str).unwrap();
-      println!("pull request {:?}", result);
-    },
-    EventType::Push => {
-      let result = json::decode::<PushEvent>(&payload_str).unwrap();
-      println!("push {:?}", result);
-    },
-    EventType::UnknownEvent => {
-      println!("unknown {:?}", payload_str);
-    },
+#[derive(Clone, PartialEq, Debug)]
+pub struct GithubEventHeader {
+  pub event_name: String
+}
+
+impl Header for GithubEventHeader {
+  fn header_name() -> &'static str {
+      "X-Github-Event"
+  }
+  fn parse_header(raw: &[Vec<u8>]) -> Result<GithubEventHeader, HttpError> {
+    parsing::from_one_raw_str(raw).and_then(|s: String| {
+      Ok(GithubEventHeader{event_name: s.to_ascii_lowercase()})
+    })
   }
 }
 
-fn handle_general(req: Request, mut res: Response<Fresh>) {
-  match req.method {
-    hyper::Post => {
-      handle_posts(req, res)
-    }
-    hyper::Get => {
-      handle_gets(req, res)
-    },
-    _ => *res.status_mut() = StatusCode::MethodNotAllowed
+impl HeaderFormat for GithubEventHeader {
+  fn fmt_header(&self, f: &mut fmt::Formatter) -> fmt::Result {
+    f.write_str(&self.event_name)
   }
 }
-
-fn handle_posts(req: Request, mut res: Response<Fresh>) {
-  match req.uri.clone() {
-    RequestUri::AbsolutePath(path) => {
-      match path.as_ref() {
-        "/github_webhooks" => handle_webhooks(req, res),
-        _ => *res.status_mut() = StatusCode::NotFound
-      }
-    },
-    _ => *res.status_mut() = StatusCode::NotFound
-  }
-}
-
-fn handle_gets(req: Request, mut res: Response<Fresh>) {
-  match req.uri.clone() {
-    RequestUri::AbsolutePath(path) => {
-      match path.as_ref() {
-        "/" => handle_root(req, res),
-        "/github_webhooks" => *res.status_mut() = StatusCode::MethodNotAllowed,
-        _ => *res.status_mut() = StatusCode::NotFound
-      }
-    },
-    _ => *res.status_mut() = StatusCode::NotFound
-  }
-}
-
-fn handle_root(_: Request, mut res: Response<Fresh>) {
-  *res.status_mut() = StatusCode::Ok;
-  res.send(b"cheapassbox.com rust + hyper & soon catalyst").unwrap();
-}
-
-fn handle_webhooks(mut req: Request, mut res: Response<Fresh>) {
-
-  let clone_headers = req.headers.clone();
-  let github_header = clone_headers.get::<XGithubEvent>();
-  match github_header {
-    Some(event) => {
-      let event_type =
-        match event.as_ref() {
-          "issue_comment" => EventType::IssueComment,
-          "pull_request_review_comment" => EventType::PullRequestReviewComment,
-          "pull_request" => EventType::PullRequest,
-          "push" => EventType::Push,
-          _ => EventType::UnknownEvent,
-        };
-      let mut payload_str = String::new();
-      req.read_to_string(&mut payload_str).unwrap();
-      receive_payload(event_type, payload_str);
-      *res.status_mut() = StatusCode::Accepted;
-      res.send(b"{\"body\": \"hello\"}").unwrap();
-    },
-    None => {
-      *res.status_mut() = StatusCode::UnprocessableEntity;
-      res.send(b"{\"body\": \"No status code present\"}").unwrap();
-    }
-  }
-}
-
-header! { (XGithubEvent, "X-Github-Event") => [String] }
 
 enum EventType {
   IssueComment,
@@ -143,10 +74,88 @@ enum EventType {
   UnknownEvent,
 }
 
+struct Deserialize;
+
+impl BeforeMiddleware for Deserialize {
+  fn before(&self, req: &mut Request) -> IronResult<()> {
+    let mut payload = String::new();
+    req.body.read_to_string(&mut payload).unwrap();
+
+    let event_header = req.headers.get::<GithubEventHeader>();
+    event_header.map(|header| {
+      match header.event_name.as_ref() {
+        "issue_comment" => {
+          req.extensions.insert::<EventType>(EventType::IssueComment);
+          req.extensions.insert::<IssueCommentEvent>(json::decode(&payload).unwrap());
+        },
+        "pull_request_review_comment" => {
+          req.extensions.insert::<EventType>(EventType::PullRequestReviewComment);
+          req.extensions.insert::<PullRequestReviewCommentEvent>(json::decode(&payload).unwrap());
+        },
+        "pull_request" => {
+          req.extensions.insert::<EventType>(EventType::PullRequest);
+          req.extensions.insert::<PullRequestEvent>(json::decode(&payload).unwrap());
+        },
+        "push" => {
+          req.extensions.insert::<EventType>(EventType::Push);
+          req.extensions.insert::<PushEvent>(json::decode(&payload).unwrap());
+        },
+        _ => req.extensions.insert::<EventType>(EventType::UnknownEvent)
+      }
+    });
+    Ok()
+  }
+}
+
+
+fn handle_webhooks(req: &mut Request) -> IronResult<Response> {
+  let possible_event_type = *req.extensions.get::<EventType>();
+
+  match possible_event_type {
+    Some(EventType::IssueComment) => Ok(Response::with((status::Accepted, "{\"body\":\"Successful recv of issue comment\"}"))),
+    Some(EventType::PullRequestReviewComment) => Ok(Response::with((status::Accepted, "{\"body\":\"Successful recv of pull request review comment\"}"))),
+    Some(EventType::PullRequest) => Ok(Response::with((status::Accepted, "{\"body\":\"Successful recv of pull request\"}"))),
+    Some(EventType::Push) => Ok(Response::with((status::Accepted, "{\"body\":\"Successful recv of push\"}"))),
+    Some(EventType::UnknownEvent) => Ok(Response::with((status::Accepted, "{\"body\":\"Recv an unhandled event\"}"))),
+    None => Ok(Response::with((status::Accepted, "{\"body\":\"No event header provided\"}")))
+  }
+}
+
+struct DeliverActionables {
+  issue_comment_tx: Sender<IssueCommentEvent>,
+  pull_request_tx: Sender<PullRequestEvent>,
+}
+
+impl AfterMiddleware for DeliverActionables {
+  fn after(&self, req: &mut Request, response: Response) -> IronResult<Response> {
+    /*
+    let possible_event_type = *req.extensions.get::<EventType>();
+    match possible_event_type {
+      Some(EventType::IssueComment) => {
+        let possible_payload = *req.extensions.get::<IssueCommentEvent>();
+        possible_payload.map(|payload: IssueCommentEvent| self.issue_comment_tx.send(5));
+
+      },
+      Some(EventType::PullRequestReviewComment) => {
+        let possible_payload = *req.extensions.get::<PullRequestEvent>();
+        possible_payload.map(|payload: PullRequestEvent| self.pull_request_event.send(5));
+      },
+      _ => ()
+    }
+    */
+    Ok(response)
+  }
+}
+
 fn main() {
   let token = std::env::var("CATALYST_GITHUB_OAUTH_TOKEN").unwrap();
   let repo_owner = std::env::var("CATALYST_REPO_OWNER").unwrap();
   let repo_name = std::env::var("CATALYST_REPO_NAME").unwrap();
 
-  Server::http("0.0.0.0:8080").unwrap().handle(handle_general).unwrap();
+  router.get("/", handle_root);
+  router.post("/github_webhooks", webhook_chain);
+
+  //listening::start_listener(token, repo_owner, repo_name)
+
+  Iron::new(router).http("0.0.0.0:8080").unwrap();
 }
