@@ -2,38 +2,20 @@ extern crate github_v3;
 extern crate iron;
 extern crate time;
 extern crate router;
+extern crate rustc_serialize;
 
 mod listening;
 mod sending;
-mod state;
 
-use iron::prelude::*;
-use iron::status;
-use router::Router;
-use std::env::args;
-use std::path::PathBuf;
-
-fn handle_root(req: &mut Request) -> IronResult<Response> {
-  Ok(Response::with((status::Ok, "cheapassbox.com rust + iron & soon catalyst")))
-}
-
-
-fn handle_webhooks(req: &mut Request) -> IronResult<Response> {
-  println!("webhook hit {:?}", req);
-  Ok(Response::with((status::Ok, "")))
-}
-
+use std::sync::mpsc::channel;
 
 fn main() {
-  let token = std::env::var("CATALYST_GITHUB_OAUTH_TOKEN").unwrap();
-  let repo_owner = std::env::var("CATALYST_REPO_OWNER").unwrap();
-  let repo_name = std::env::var("CATALYST_REPO_NAME").unwrap();
+  let (issue_comment_tx, issue_comment_rx) = channel();
+  let (pull_request_tx, pull_request_rx) = channel();
+  let (pull_request_review_tx, pull_request_review_rx) = channel();
 
-  let mut router = Router::new();
+  let sender = sending::spawn_sender(issue_comment_rx, pull_request_rx, pull_request_review_rx);
 
-  router.get("/", handle_root);
-  router.get("/github_webhooks", handle_webhooks);
+  listening::spawn_listener(issue_comment_tx, pull_request_tx, pull_request_review_tx).http("0.0.0.0:8080").unwrap();
 
-  //listening::start_listener(token, repo_owner, repo_name)
-  Iron::new(router).http("localhost:8080").unwrap();
 }
