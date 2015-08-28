@@ -8,6 +8,7 @@ time = "*"
 rustc-serialize = "0.3.16"
 iron = "*"
 router = "*"
+itertools = "*"
 
 
 [dependencies.github_v3]

@@ -4,6 +4,7 @@ version = "0.1.0"
 dependencies = [
  "github_v3 0.1.0 (git+https://github.com/acmcarther/github_v3_rust?rev=abf6e3b)",
  "iron 0.1.21 (registry+https://github.com/rust-lang/crates.io-index)",
+ "itertools 0.3.25 (registry+https://github.com/rust-lang/crates.io-index)",
  "router 0.0.14 (registry+https://github.com/rust-lang/crates.io-index)",
  "rustc-serialize 0.3.16 (registry+https://github.com/rust-lang/crates.io-index)",
  "time 0.1.32 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -120,6 +121,11 @@ dependencies = [
  "typemap 0.3.3 (registry+https://github.com/rust-lang/crates.io-index)",
  "url 0.2.37 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
+
+[[package]]
+name = "itertools"
+version = "0.3.25"
+source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
 name = "kernel32-sys"
