@@ -3,6 +3,7 @@ use iron::prelude::*;
 use iron::error::HttpError;
 use iron::headers::{parsing, Header, HeaderFormat};
 use iron::{BeforeMiddleware, AfterMiddleware, typemap};
+use iron::mime::Mime;
 
 use router::Router;
 
@@ -11,6 +12,7 @@ use std::io::Read;
 use std::sync::Mutex;
 use std::ascii::AsciiExt;
 use std::sync::mpsc::Sender;
+use std::fs::File;
 
 use github_v3::types::comments::{
   IssueCommentEvent,
@@ -20,9 +22,34 @@ use github_v3::types::PushEvent;
 use github_v3::types::pull_requests::PullRequestEvent;
 
 use rustc_serialize::{json};
+use std::io::Error as IoError;
+
+fn serve_file(file_path: &str) -> Result<String, IoError> {
+  let mut s = String::new();
+  File::open(file_path)
+    .and_then(|mut file| file.read_to_string(&mut s))
+    .map(|_| s)
+}
+
+fn handle_application_js(_: &mut Request) -> IronResult<Response> {
+  let content_type = "application/javascript".parse::<Mime>().unwrap();
+  let response = Response::with((
+      content_type,
+      status::Ok,
+      serve_file("./client/assets/bundle.js").unwrap(),
+  ));
+  Ok(response)
+}
+
 
 fn handle_root(_: &mut Request) -> IronResult<Response> {
-  Ok(Response::with((status::Ok, "Hello from Catalyst. At some point a configuration page will live here.")))
+  let content_type = "text/html".parse::<Mime>().unwrap();
+  let response = Response::with((
+      content_type,
+      status::Ok,
+      serve_file("./client/index.html").unwrap(),
+  ));
+  Ok(response)
 }
 
 #[derive(Clone, PartialEq, Debug)]
@@ -72,7 +99,6 @@ impl typemap::Key for IsPullRequest { type Value = PullRequestEvent; }
 struct IsPush;
 impl typemap::Key for IsPush { type Value = PushEvent; }
 
-
 impl BeforeMiddleware for Deserialize {
   fn before(&self, req: &mut Request) -> IronResult<()> {
     let mut payload = String::new();
@@ -104,7 +130,6 @@ impl BeforeMiddleware for Deserialize {
     Ok(())
   }
 }
-
 
 fn handle_webhooks(req: &mut Request) -> IronResult<Response> {
   let possible_event_type = req.extensions.get::<EventInfo>();
@@ -165,6 +190,7 @@ pub fn spawn_listener(
 
   let mut router = Router::new();
   router.get("/", handle_root);
+  router.get("/assets/bundle.js", handle_application_js);
   router.post("/github_webhooks", webhook_chain);
 
   Iron::new(router)
