@@ -4,27 +4,24 @@ pub use self::sending::{
 
 mod sending {
 
-  use github_v3::{GithubClient, IssueCommenter};
-
-  use github_v3::event_types::{
-    IssueCommentEvent,
+  use github_v3::IssueCommenter;
+  use github_v3::Authorization;
+  use github_v3::github_client::GithubClient;
+  use github_v3::types::repos::Repository;
+  use github_v3::types::pull_requests::{
     PullRequestEvent,
+  };
+  use github_v3::types::comments::{
+    IssueCommentEvent,
+    CreateIssueComment,
     PullRequestReviewCommentEvent,
   };
 
-  use std::sync::mpsc::{Receiver, TryRecvError};
-
-  use github_v3::Authorization;
-  use github_v3::types::Repository;
-  use github_v3::issue_comment_types::CreateComment;
-
-  use std::thread;
-
   use std::env;
-
+  use std::thread;
   use std::thread::JoinHandle;
-
   use std::collections::HashMap;
+  use std::sync::mpsc::{Receiver, TryRecvError};
 
   use itertools::Itertools;
 
@@ -68,7 +65,7 @@ mod sending {
               let name = issue_comment.repository.name.clone();
               let owner = issue_comment.repository.owner.login.clone();
               let repo = Repository{ owner: owner, repo_name: name };
-              let response = CreateComment { body: "PTBOT: Assigning @acmcarther to this PR".to_owned() };
+              let response = CreateIssueComment { body: "PTBOT: Assigning @acmcarther to this PR".to_owned() };
               println!("LOG: Received a request for reviewers on issue {}, assigning @acmcarther", issue_id);
               let _ = client.create_comment(repo, issue_id, response);
             }

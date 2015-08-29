@@ -15,12 +15,12 @@ mod listening {
   use std::ascii::AsciiExt;
   use std::sync::Mutex;
 
-  use github_v3::event_types::{
+  use github_v3::types::comments::{
     IssueCommentEvent,
-    PullRequestEvent,
     PullRequestReviewCommentEvent,
-    PushEvent,
   };
+  use github_v3::types::pull_requests::PullRequestEvent;
+  use github_v3::types::PushEvent;
 
   use rustc_serialize::{json};
   use std::sync::mpsc::Sender;
