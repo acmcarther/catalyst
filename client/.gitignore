@@ -2,3 +2,4 @@
 /assets/*.js
 /assets/*.json
 npm-debug.log
+/dist/*.js

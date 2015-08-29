@@ -36,7 +36,7 @@ fn handle_application_js(_: &mut Request) -> IronResult<Response> {
   let response = Response::with((
       content_type,
       status::Ok,
-      serve_file("./client/assets/bundle.js").unwrap(),
+      serve_file("./client/dist/bundle.js").unwrap(),
   ));
   Ok(response)
 }
