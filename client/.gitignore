@@ -1,2 +1,4 @@
 /node_modules/
-/assets/bundle.js
+/assets/*.js
+/assets/*.json
+npm-debug.log

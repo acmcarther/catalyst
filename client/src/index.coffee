@@ -1,3 +1,5 @@
-Main = require './main.coffee'
+React = require 'react'
 
-React.render (Main {}) , document.body
+App = require './components/app.coffee'
+
+React.render (App {}) , document.body

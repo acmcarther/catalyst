@@ -1,3 +1,5 @@
+React = require 'react'
+
 { div } = React.DOM
 
 Timer = React.createClass
