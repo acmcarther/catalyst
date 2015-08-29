@@ -1,3 +1,4 @@
 /node_modules/
 /assets/*.js
 /assets/*.json
+npm-debug.log
