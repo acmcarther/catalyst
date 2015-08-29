@@ -8,4 +8,4 @@ AppHeader = React.createClass
       h1  {}, 'Catalyst'
       h3  {}, 'A bot to manage your github build process!'
 
-module.exports = React.createFactory AppHeader
+module.exports = AppHeader

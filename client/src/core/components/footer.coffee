@@ -1,3 +1,5 @@
+require './footer.styl'
+
 React = require 'react'
 
 { div, a } = React.DOM
@@ -11,5 +13,5 @@ AppFooter = React.createClass
         onClick: -> window.location = 'https://github.com/acmcarther/catalyst'
         'Catalyst on Github'
 
-module.exports = React.createFactory AppFooter
+module.exports = AppFooter
 
