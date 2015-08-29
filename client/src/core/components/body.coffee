@@ -1,3 +1,4 @@
+require './body.styl'
 React = require 'react'
 
 CoreActions = require '../actions/core_actions.coffee'
@@ -30,6 +31,7 @@ Body = React.createClass
             'Delete Item'
 
       div {},
+        div className: 'description', 'Debug list component'
         input
           type: 'text'
           placeholder: 'Item details'

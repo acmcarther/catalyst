@@ -2,8 +2,8 @@ require './core.styl'
 
 React = require 'react'
 Body = React.createFactory(require './body.coffee')
-Header = React.createFactory(require './header.coffee')
-Footer = React.createFactory(require './footer.coffee')
+Header = React.createFactory(require './header/header.coffee')
+Footer = React.createFactory(require './footer/footer.coffee')
 
 {div, h1, h2} = React.DOM
 
