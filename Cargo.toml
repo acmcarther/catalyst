@@ -8,8 +8,9 @@ time = "*"
 rustc-serialize = "0.3.16"
 iron = "*"
 router = "*"
+itertools = "*"
 
 
 [dependencies.github_v3]
 git = "https://github.com/acmcarther/github_v3_rust"
-rev = "abf6e3b"
+rev = "f387bbd"

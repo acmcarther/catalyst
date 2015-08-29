@@ -3,6 +3,7 @@ extern crate iron;
 extern crate time;
 extern crate router;
 extern crate rustc_serialize;
+extern crate itertools;
 
 mod listening;
 mod sending;

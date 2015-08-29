@@ -2,8 +2,9 @@
 name = "catalyst"
 version = "0.1.0"
 dependencies = [
- "github_v3 0.1.0 (git+https://github.com/acmcarther/github_v3_rust?rev=abf6e3b)",
+ "github_v3 0.1.0 (git+https://github.com/acmcarther/github_v3_rust?rev=f387bbd)",
  "iron 0.1.21 (registry+https://github.com/rust-lang/crates.io-index)",
+ "itertools 0.3.25 (registry+https://github.com/rust-lang/crates.io-index)",
  "router 0.0.14 (registry+https://github.com/rust-lang/crates.io-index)",
  "rustc-serialize 0.3.16 (registry+https://github.com/rust-lang/crates.io-index)",
  "time 0.1.32 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -63,7 +64,7 @@ dependencies = [
 [[package]]
 name = "github_v3"
 version = "0.1.0"
-source = "git+https://github.com/acmcarther/github_v3_rust?rev=abf6e3b#abf6e3b5872c233f027e687e86a5cea133c9e8b5"
+source = "git+https://github.com/acmcarther/github_v3_rust?rev=f387bbd#f387bbd4915f34efcb1500d589ecf027b2d17495"
 dependencies = [
  "hyper 0.6.10 (registry+https://github.com/rust-lang/crates.io-index)",
  "rustc-serialize 0.3.16 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -120,6 +121,11 @@ dependencies = [
  "typemap 0.3.3 (registry+https://github.com/rust-lang/crates.io-index)",
  "url 0.2.37 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
+
+[[package]]
+name = "itertools"
+version = "0.3.25"
+source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
 name = "kernel32-sys"
