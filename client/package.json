@@ -8,6 +8,9 @@
     "react-bootstrap": "^0.24.3",
     "react-router": "^0.13.3"
   },
+  "scripts": {
+    "start": "node server.js"
+  },
   "devDependencies": {
     "coffee-loader": "^0.7.2",
     "coffee-script": "^1.9.3",
@@ -18,9 +21,8 @@
     "jsx-loader": "^0.13.2",
     "cjsx-loader": "^2.0.1",
     "load-grunt-tasks": "^3.2.0",
-    "node-sass": "^3.2.0",
     "react-hot-loader": "^1.2.8",
-    "sass-loader": "^1.0.4",
+    "stylus-loader": "^1.2.1",
     "style-loader": "^0.12.3",
     "webpack": "^1.10.5",
     "webpack-dev-server": "^1.10.1"

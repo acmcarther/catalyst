@@ -1,0 +1,10 @@
+webpackHotUpdate(0,{
+
+/***/ 230:
+/***/ function(module, exports, __webpack_require__) {
+
+	eval("/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(59), RootInstanceProvider = __webpack_require__(67), ReactMount = __webpack_require__(69), React = __webpack_require__(123); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {\n\nvar React, Timer, div;\n\nReact = __webpack_require__(123);\n\ndiv = React.DOM.div;\n\nTimer = React.createClass({\n  getInitialState: function() {\n    return {\n      secondsElapsed: 0\n    };\n  },\n  tick: function() {\n    return this.setState({\n      secondsElapsed: this.state.secondsElapsed + 1\n    });\n  },\n  componentDidMount: function() {\n    return this.interval = setInterval(this.tick, 1000);\n  },\n  componentWillUnmount: function() {\n    return clearInterval(this.interval);\n  },\n  render: function() {\n    return div({}, \"Seconds Elapsed: \" + this.state.secondsElapsed);\n  }\n});\n\nmodule.exports = React.createFactory(Timer);\n\n\n/* REACT HOT LOADER */ }).call(this); } finally { if (true) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = __webpack_require__(231); if (makeExportsHot(module, __webpack_require__(123))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error(\"Cannot not apply hot update to \" + \"timer.coffee\" + \": \" + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }\n/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(33)(module)))\n\n/*****************\n ** WEBPACK FOOTER\n ** ./src/components/timer.coffee\n ** module id = 230\n ** module chunks = 0\n **/\n//# sourceURL=webpack:///./src/components/timer.coffee?");
+
+/***/ }
+
+})
