@@ -4,7 +4,7 @@ React = require 'react'
 
 Header = React.createFactory require '../components/header/header.coffee'
 Footer = React.createFactory require '../components/footer/footer.coffee'
-MainSection = React.createFactory require '../components/main_section.coffee'
+MainSection = React.createFactory require '../components/main_section/main_section.coffee'
 LoginActions = require '../actions/login.coffee'
 PageLocationActions = require '../actions/page_location.coffee'
 

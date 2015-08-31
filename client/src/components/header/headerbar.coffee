@@ -10,20 +10,23 @@ HeaderBar = React.createClass
     { login, loginActions, pageLocationActions } = @props
     username = login.getIn ['login', 'username']
     div className: 'top-bar',
+      if username?
+        span
+          className: 'header-elem logged-in-as'
+          "Welcome, #{username}"
       span
         className: 'header-elem clickable'
         onClick: -> pageLocationActions.goToHome()
         'Home'
-      span className: 'header-elem', 'Help'
+      span
+        className: 'header-elem clickable',
+        onClick: -> pageLocationActions.goToHelp()
+        'Help'
       if username?
-        span {},
-          span
-            className: 'header-elem logged-in-as'
-            "Welcome, #{username}"
-          span
-            className: 'header-elem clickable'
-            onClick: -> loginActions.logOut()
-            'Log out'
+        span
+          className: 'header-elem clickable'
+          onClick: -> loginActions.logOut()
+          'Log out'
       else
         span
           className: 'header-elem clickable',
