@@ -5,27 +5,27 @@ React = require 'react'
 Header = React.createFactory require '../components/header/header.coffee'
 Footer = React.createFactory require '../components/footer/footer.coffee'
 MainSection = React.createFactory require '../components/main_section.coffee'
-TodoActions = require '../actions/todos.coffee'
 LoginActions = require '../actions/login.coffee'
+PageLocationActions = require '../actions/page_location.coffee'
 
 { div } = React.DOM
 PropTypes = React.PropTypes
 
 App = React.createClass
   render: ->
-    {todos, login, dispatch} = @props
-    todoActions = bindActionCreators TodoActions, dispatch
+    { login, pageLocation, dispatch } = @props
     loginActions = bindActionCreators LoginActions, dispatch
+    pageLocationActions = bindActionCreators PageLocationActions, dispatch
 
     div {},
-      Header { login, loginActions }
-      MainSection { todos, todoActions }
+      Header { login, loginActions, pageLocationActions }
+      MainSection { pageLocation, loginActions }
 
 App.propTypes =
   dispatch: PropTypes.func.isRequired
 
 select = (state) ->
-  todos: state.todos
   login: state.login
+  pageLocation: state.pageLocation
 
 module.exports = connect(select)(App)

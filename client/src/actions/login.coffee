@@ -1,5 +1,6 @@
-type = require '../constants/action_types.coffee'
-Promise = require 'es6-promise'
+types = require '../constants/action_types.coffee'
+{Promise} = require 'es6-promise'
+Jwt = require 'jwt-simple'
 
 LoginActions =
   logIn: (username, password) ->
@@ -9,11 +10,12 @@ LoginActions =
         user: 'test-user'
         role: 'user'
 
-      Promise.resolve {
+      Promise.resolve({
         type: types.LOG_IN
-        token: jwt.encode payload, 'dummy-secret', 'HS512'
+        token: Jwt.encode payload, 'dummy-secret', 'HS512'
         username
-      }
+      })
+      .then (res) -> dispatch(res)
 
   logOut: -> type: types.LOG_OUT
 

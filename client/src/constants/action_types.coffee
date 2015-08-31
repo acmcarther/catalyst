@@ -1,6 +1,6 @@
 module.exports = {
-  ADD_TODO: 'ADD_TODO',
-  DELETE_TODO: 'DELETE_TODO',
+  GO_TO_LOG_IN: 'GO_TO_LOG_IN',
+  GO_TO_HOME: 'GO_TO_HOME',
   LOG_IN: 'LOG_IN',
   LOG_OUT: 'LOG_OUT'
 }

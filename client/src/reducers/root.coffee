@@ -1,11 +1,11 @@
 React = require 'react'
 { combineReducers } = require 'redux'
-todos = require './todos.coffee'
 login = require './login.coffee'
+pageLocation = require './page_location.coffee'
 
 rootReducer = combineReducers {
-  todos
   login
+  pageLocation
 }
 
 module.exports = rootReducer

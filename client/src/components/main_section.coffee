@@ -1,41 +1,53 @@
+require './main_section.styl'
 React = require 'react'
 
 PropTypes = React.PropTypes
 
-{ section, ul, div, button, input} = React.DOM
+{ section, ul, div, button, input, span} = React.DOM
+
+Footer = React.createFactory require './footer/footer.coffee'
 
 MainSection = React.createClass
   getInitialState: ->
-    newItemText: ''
+    username: ''
+    password: ''
 
   render: ->
-    { todos, todoActions } = @props
-
+    {pageLocation, loginActions} = @props
+    pageLocation = pageLocation.get 'currentPage'
     div {},
-      div {}, 'Main Section'
-      section className: 'main',
-        ul className: 'todo-list',
-          todos.map (item, idx) ->
-            id = item.get 'id'
-            div
-              key: id,
-              onClick: -> todoActions.deleteTodo id
-              item.get 'text'
+      div className: 'main-body',
+        if pageLocation is 'home'
+          div {}, 'Home'
+        else if pageLocation is 'login'
+          div {},
+            div {}, 'Log In'
+            span {},
+              span {}, 'Username:'
+              input
+                type: 'text'
+                placeholder: 'Username'
+                onBlur: (e) => @setState username: e.target.value
+            span {},
+              span {}, 'Password:'
+              input
+                type: 'password'
+                placeholder: 'Password'
+                onBlur: (e) => @setState password: e.target.value
 
-      input
-        onChange: (e) => @setState newItemText: e.target.value
-        value: @state.newItemText
-        type: 'text'
+            button
+              onClick: =>
+                return unless @state.username isnt '' and @state.password isnt ''
+                loginActions.logIn @state.username, @state.password
+                @setState username: '', password: ''
 
-      button
-        onClick: =>
-          @setState newItemText: ''
-          if @state.newItemText isnt '' then todoActions.addTodo @state.newItemText
-        'Add new item'
+              'Submit'
+
+      div {}, Footer {}
 
 
 
 MainSection.propTypes =
-  todoActions: PropTypes.object.isRequired
+  loginActions: PropTypes.object.isRequired
 
 module.exports = MainSection

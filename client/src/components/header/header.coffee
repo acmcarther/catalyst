@@ -1,5 +1,6 @@
 require './header.styl'
 React = require 'react'
+PropTypes = React.PropTypes
 
 { div, h1, h3 } = React.DOM
 
@@ -7,14 +8,15 @@ HeaderBar = React.createFactory require './headerbar.coffee'
 
 Header = React.createClass
   render: ->
-    { login, loginActions} =
+    { login, loginActions, pageLocationActions} = @props
     div {},
-      div {}, HeaderBar {login, loginActions}
+      div {}, HeaderBar {login, loginActions, pageLocationActions}
       div className: 'app-title',
         h1  {}, 'Catalyst'
         h3  {}, 'A bot to manage your github build process!'
 
-MainSection.propTypes =
+Header.propTypes =
   loginActions: PropTypes.object.isRequired
+  pageLocationActions: PropTypes.object.isRequired
 
 module.exports = Header

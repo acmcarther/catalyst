@@ -1,4 +1,4 @@
-{ LOG_IN, LOG_OUT } = require '../constants/action_types.coffee'
+{ BEGIN_LOG_IN, LOG_IN, LOG_OUT } = require '../constants/action_types.coffee'
 
 Immutable = require 'immutable'
 Jwt = require 'jwt-simple'
@@ -11,13 +11,15 @@ validatedToken = (jwt) -> jwt
 
 login = (state = initialState, action) ->
   switch action.type
+    when BEGIN_LOG_IN
+      state.merge loggingIn: true
     when LOG_IN
-      return state unless token?
-      Immutable.fromJS
+      return state unless action.token?
+      state.merge
         login:
-          token: token
-          username: username
-    when LOG_OUT then Immutable.fromJS login: null
+          token: action.token
+          username: action.username
+    when LOG_OUT then state.merge login: null
     else state
 
 module.exports = login
