@@ -8,7 +8,7 @@ HeaderBar = React.createFactory require './headerbar.coffee'
 
 Header = React.createClass
   render: ->
-    { login, loginActions, pageLocationActions} = @props
+    { login, loginActions, pageLocationActions } = @props
     div {},
       div {}, HeaderBar {login, loginActions, pageLocationActions}
       div className: 'app-title',

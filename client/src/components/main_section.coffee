@@ -13,7 +13,7 @@ MainSection = React.createClass
     password: ''
 
   render: ->
-    {pageLocation, loginActions} = @props
+    { pageLocation, loginActions } = @props
     pageLocation = pageLocation.get 'currentPage'
     div {},
       div className: 'main-body',
@@ -45,9 +45,6 @@ MainSection = React.createClass
 
       div {}, Footer {}
 
-
-
-MainSection.propTypes =
-  loginActions: PropTypes.object.isRequired
+MainSection.propTypes = loginActions: PropTypes.object.isRequired
 
 module.exports = MainSection

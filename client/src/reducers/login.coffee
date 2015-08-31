@@ -3,11 +3,7 @@
 Immutable = require 'immutable'
 Jwt = require 'jwt-simple'
 
-initialState = Immutable.fromJS
-  login: null
-
-# TODO: Validation
-validatedToken = (jwt) -> jwt
+initialState = Immutable.fromJS login: null
 
 login = (state = initialState, action) ->
   switch action.type
@@ -23,8 +19,3 @@ login = (state = initialState, action) ->
     else state
 
 module.exports = login
-
-
-
-
-
