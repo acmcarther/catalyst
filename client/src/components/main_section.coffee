@@ -9,7 +9,7 @@ MainSection = React.createClass
     newItemText: ''
 
   render: ->
-    { todos, actions } = @props
+    { todos, todoActions } = @props
 
     div {},
       div {}, 'Main Section'
@@ -19,7 +19,7 @@ MainSection = React.createClass
             id = item.get 'id'
             div
               key: id,
-              onClick: -> actions.deleteTodo id
+              onClick: -> todoActions.deleteTodo id
               item.get 'text'
 
       input
@@ -30,12 +30,12 @@ MainSection = React.createClass
       button
         onClick: =>
           @setState newItemText: ''
-          if @state.newItemText isnt '' then actions.addTodo @state.newItemText
+          if @state.newItemText isnt '' then todoActions.addTodo @state.newItemText
         'Add new item'
 
 
 
 MainSection.propTypes =
-  actions: PropTypes.object.isRequired
+  todoActions: PropTypes.object.isRequired
 
 module.exports = MainSection

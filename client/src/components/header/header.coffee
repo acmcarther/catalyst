@@ -7,10 +7,14 @@ HeaderBar = React.createFactory require './headerbar.coffee'
 
 Header = React.createClass
   render: ->
+    { login, loginActions} =
     div {},
-      div {}, HeaderBar {}
+      div {}, HeaderBar {login, loginActions}
       div className: 'app-title',
         h1  {}, 'Catalyst'
         h3  {}, 'A bot to manage your github build process!'
+
+MainSection.propTypes =
+  loginActions: PropTypes.object.isRequired
 
 module.exports = Header

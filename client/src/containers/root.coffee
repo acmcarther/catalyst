@@ -1,33 +1,37 @@
 React = require 'react'
 Provider = React.createFactory require('react-redux').Provider
-{ compose, createStore } = require 'redux'
+{ applyMiddleware, compose, createStore } = require 'redux'
 rootReducer = require '../reducers/root.coffee'
-
-
-if __DEVTOOLS__
-  { devTools } = require 'redux-devtools'
-  { DevTools, DebugPanel, LogMonitor } = require 'redux-devtools/lib/react'
-  DevTools = React.createFactory DevTools
-  DebugPanel = React.createFactory DebugPanel
-  DiffMonitor = require 'redux-devtools-diff-monitor'
+promiseMiddleware = require 'redux-promise'
 
 App = React.createFactory require './app.coffee'
 
 if __DEVTOOLS__
+  { devTools } = require 'redux-devtools'
   finalCreateStore = compose(
+    applyMiddleware promiseMiddleware
     devTools()
     createStore
   )
   store = finalCreateStore rootReducer
 else
-  store = createStore rootReducer
+  finalCreateStore = compose(
+    applyMiddleware promiseMiddleware
+    createStore
+  )
+  store = finalCreateStore rootReducer
 
 { div } = React.DOM
 
-Root = React.createClass 
+Root = React.createClass
   render: ->
     div {},
       if __DEVTOOLS__
+        { DevTools, DebugPanel, LogMonitor } = require 'redux-devtools/lib/react'
+        DevTools = React.createFactory DevTools
+        DebugPanel = React.createFactory DebugPanel
+        DiffMonitor = require 'redux-devtools-diff-monitor'
+
         DebugPanel { top: false, right: true, bottom: true },
           DevTools { store, monitor: DiffMonitor }
       Provider { store }, App
