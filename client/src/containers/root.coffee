@@ -2,7 +2,6 @@ React = require 'react'
 {div} = React.DOM
 Provider = React.createFactory require('react-redux').Provider
 {applyMiddleware, compose, createStore} = require 'redux'
-promiseMiddleware = require 'redux-promise'
 thunkMiddleware = require 'redux-thunk'
 
 rootReducer = require '../reducers/root.coffee'
