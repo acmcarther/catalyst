@@ -1,7 +1,7 @@
 Immutable = require 'immutable'
 Jwt = require 'jwt-simple'
 
-{ BEGIN_LOG_IN, LOG_IN, LOG_OUT } = require '../constants/action_types.coffee'
+{BEGIN_LOG_IN, LOG_IN, LOG_OUT} = require '../constants/action_types.coffee'
 
 initialState = Immutable.fromJS login: null
 

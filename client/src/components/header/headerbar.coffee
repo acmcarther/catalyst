@@ -1,12 +1,12 @@
 React = require 'react'
 PropTypes = React.PropTypes
-{ div, span, } = React.DOM
+{div, span} = React.DOM
 
 require './headerbar.styl'
 
 HeaderBar = React.createClass
   render: ->
-    { login, loginActions, pageLocationActions } = @props
+    {login, loginActions, pageLocationActions} = @props
     username = login.getIn ['login', 'username']
     div className: 'top-bar',
       if username?

@@ -1,5 +1,5 @@
 React = require 'react'
-{ div } = React.DOM
+{div} = React.DOM
 
 Help = React.createClass
   render: ->

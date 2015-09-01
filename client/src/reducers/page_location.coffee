@@ -1,6 +1,6 @@
 Immutable = require 'immutable'
 
-{ GO_TO_LOG_IN, LOG_IN, LOG_OUT, GO_TO_HOME, GO_TO_HELP } = require '../constants/action_types.coffee'
+{GO_TO_LOG_IN, LOG_IN, LOG_OUT, GO_TO_HOME, GO_TO_HELP} = require '../constants/action_types.coffee'
 
 initialState = Immutable.fromJS
   currentPage: 'home'

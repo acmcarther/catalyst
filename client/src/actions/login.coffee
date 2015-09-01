@@ -16,7 +16,7 @@ LoginActions =
         token: Jwt.encode payload, 'dummy-secret', 'HS512'
         username
       })
-      .then (res) -> dispatch(res)
+      .then dispatch
 
   logOut: -> type: types.LOG_OUT
 

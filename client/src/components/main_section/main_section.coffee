@@ -1,6 +1,6 @@
 React = require 'react'
 PropTypes = React.PropTypes
-{ section, ul, div, button, input, span} = React.DOM
+{div} = React.DOM
 
 require './main_section.styl'
 LoginForm = React.createFactory require './login_form.coffee'
@@ -10,7 +10,7 @@ Footer = React.createFactory require '../footer/footer.coffee'
 
 MainSection = React.createClass
   render: ->
-    { pageLocation, loginActions } = @props
+    {pageLocation, loginActions} = @props
     div {},
       div className: 'main-body',
         switch pageLocation.get 'currentPage'

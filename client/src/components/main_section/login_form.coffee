@@ -1,6 +1,6 @@
 React = require 'react'
 PropTypes = React.PropTypes
-{ section, ul, div, button, input, span} = React.DOM
+{div, button, input, span} = React.DOM
 
 LoginForm = React.createClass
   getInitialState: ->
@@ -8,7 +8,7 @@ LoginForm = React.createClass
     password: ''
 
   render: ->
-    { loginActions } = @props
+    {loginActions} = @props
     div {},
       div {}, 'Log In'
       span {},
@@ -29,7 +29,6 @@ LoginForm = React.createClass
           return unless @state.username isnt '' and @state.password isnt ''
           loginActions.logIn @state.username, @state.password
           @setState username: '', password: ''
-
         'Submit'
 
 LoginForm.propTypes = loginActions: PropTypes.object.isRequired
