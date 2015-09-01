@@ -1,8 +1,7 @@
-require './footer.styl'
-
 React = require 'react'
+{div, span, a} = React.DOM
 
-{ div, span, a } = React.DOM
+require './footer.styl'
 
 AppFooter = React.createClass
   render: ->

@@ -1,5 +1,5 @@
 React = require 'react'
 
-App = React.createFactory require './core/components/core.coffee'
+Root = React.createFactory require './containers/root.coffee'
 
-React.render (App {}) , document.body
+React.render (Root {}), document.body

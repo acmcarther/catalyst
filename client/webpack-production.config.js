@@ -17,7 +17,10 @@ module.exports = {
   },
   plugins: [
     new webpack.NoErrorsPlugin(),
-    new webpack.IgnorePlugin(/vertx/) // https://github.com/webpack/webpack/issues/353
+    new webpack.IgnorePlugin(/vertx/), // https://github.com/webpack/webpack/issues/353
+    new webpack.DefinePlugin({
+      __DEVTOOLS__: false
+    })
   ],
   resolve: {
     extensions: ['', '.js', '.coffee', '.styl']
