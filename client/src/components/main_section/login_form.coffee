@@ -1,34 +1,38 @@
 React = require 'react'
 PropTypes = React.PropTypes
-{div, button, input, span} = React.DOM
+{div, button, label, input, span} = React.DOM
+
+isEmpty = (string) -> string is '' or not string?
 
 LoginForm = React.createClass
   getInitialState: ->
     username: ''
     password: ''
 
+  onSubmitClick: ->
+    return if isEmpty(@state.username) or isEmpty(@state.password)
+    loginActions.logIn @state.username, @state.password
+    @setState username: '', password: ''
+
   render: ->
     {loginActions} = @props
     div {},
       div {}, 'Log In'
       span {},
-        span {}, 'Username:'
+        label {}, 'Username:'
         input
           type: 'text'
           placeholder: 'Username'
           onBlur: (e) => @setState username: e.target.value
       span {},
-        span {}, 'Password:'
+        label {}, 'Password:'
         input
           type: 'password'
           placeholder: 'Password'
           onBlur: (e) => @setState password: e.target.value
 
       button
-        onClick: =>
-          return unless @state.username isnt '' and @state.password isnt ''
-          loginActions.logIn @state.username, @state.password
-          @setState username: '', password: ''
+        onClick: => @onSubmitClick()
         'Submit'
 
 LoginForm.propTypes = loginActions: PropTypes.object.isRequired

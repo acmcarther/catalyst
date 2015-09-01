@@ -5,17 +5,21 @@ Jwt = require 'jwt-simple'
 
 initialState = Immutable.fromJS login: null
 
+handleLogin = (state, action) ->
+  return state unless action.token?
+  state.merge
+    login:
+      token: action.token
+      username: action.username
+
 login = (state = initialState, action) ->
   switch action.type
     when BEGIN_LOG_IN
       state.merge loggingIn: true
     when LOG_IN
-      return state unless action.token?
-      state.merge
-        login:
-          token: action.token
-          username: action.username
-    when LOG_OUT then state.merge login: null
+      handleLogin state, action
+    when LOG_OUT
+      state.merge login: null
     else state
 
 module.exports = login
