@@ -1,6 +1,5 @@
 React = require 'react'
 PropTypes = React.PropTypes
-
 { section, ul, div, button, input, span} = React.DOM
 
 LoginForm = React.createClass

@@ -1,6 +1,7 @@
-types = require '../constants/action_types.coffee'
 {Promise} = require 'es6-promise'
 Jwt = require 'jwt-simple'
+
+types = require '../constants/action_types.coffee'
 
 LoginActions =
   logIn: (username, password) ->

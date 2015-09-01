@@ -1,9 +1,8 @@
-require './header.styl'
 React = require 'react'
 PropTypes = React.PropTypes
-
 { div, h1, h3 } = React.DOM
 
+require './header.styl'
 HeaderBar = React.createFactory require './headerbar.coffee'
 
 Header = React.createClass

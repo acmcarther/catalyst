@@ -1,9 +1,8 @@
-require './headerbar.styl'
-
 React = require 'react'
 PropTypes = React.PropTypes
-
 { div, span, } = React.DOM
+
+require './headerbar.styl'
 
 HeaderBar = React.createClass
   render: ->

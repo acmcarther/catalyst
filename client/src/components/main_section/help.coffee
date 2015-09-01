@@ -1,5 +1,4 @@
 React = require 'react'
-
 { div } = React.DOM
 
 Help = React.createClass

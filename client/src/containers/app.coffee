@@ -1,4 +1,6 @@
 React = require 'react'
+PropTypes = React.PropTypes
+{ div } = React.DOM
 { bindActionCreators } = require 'redux'
 { connect } = require 'react-redux'
 
@@ -8,8 +10,6 @@ MainSection = React.createFactory require '../components/main_section/main_secti
 LoginActions = require '../actions/login.coffee'
 PageLocationActions = require '../actions/page_location.coffee'
 
-{ div } = React.DOM
-PropTypes = React.PropTypes
 
 App = React.createClass
   render: ->

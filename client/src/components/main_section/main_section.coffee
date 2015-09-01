@@ -1,14 +1,11 @@
-require './main_section.styl'
 React = require 'react'
+PropTypes = React.PropTypes
+{ section, ul, div, button, input, span} = React.DOM
 
+require './main_section.styl'
 LoginForm = React.createFactory require './login_form.coffee'
 Home = React.createFactory require './home.coffee'
 Help = React.createFactory require './help.coffee'
-
-PropTypes = React.PropTypes
-
-{ section, ul, div, button, input, span} = React.DOM
-
 Footer = React.createFactory require '../footer/footer.coffee'
 
 MainSection = React.createClass

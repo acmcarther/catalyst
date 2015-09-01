@@ -1,10 +1,10 @@
 React = require 'react'
 Provider = React.createFactory require('react-redux').Provider
 { applyMiddleware, compose, createStore } = require 'redux'
-rootReducer = require '../reducers/root.coffee'
 promiseMiddleware = require 'redux-promise'
 thunkMiddleware = require 'redux-thunk'
 
+rootReducer = require '../reducers/root.coffee'
 App = React.createFactory require './app.coffee'
 
 if __DEVTOOLS__
