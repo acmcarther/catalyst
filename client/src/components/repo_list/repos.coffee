@@ -20,7 +20,6 @@ Repos = React.createClass
       else
         ReposLoading {}
 
-
 Repos.propTypes =
   repoActions: PropTypes.object.isRequired
   repo: PropTypes.object.isRequired

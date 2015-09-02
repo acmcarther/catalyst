@@ -18,7 +18,6 @@ finalCreateStore =
 configureStore = (initialState) ->
   store = finalCreateStore rootReducer, initialState
 
-  console.log 'module', module
   if module.hot
     module.hot.accept '../reducers/root.coffee', ->
       store.replaceReducer require '../reducers/root.coffee'
