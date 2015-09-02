@@ -20,7 +20,7 @@ App = React.createClass
 
     div {},
       Header {login, loginActions, pageLocationActions}
-      MainSection {login, repo, repoActions, pageLocation, loginActions}
+      MainSection {login, repo, repoActions, pageLocation, loginActions, pageLocationActions}
 
 App.propTypes =
   dispatch: PropTypes.func.isRequired

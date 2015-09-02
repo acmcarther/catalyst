@@ -5,4 +5,5 @@ module.exports = {
   LOG_IN: 'LOG_IN',
   LOG_OUT: 'LOG_OUT',
   GET_REPOS: 'GET_REPOS'
+  GO_TO_REPO: 'GO_TO_REPO'
 }

@@ -7,8 +7,9 @@ ReposLoading = React.createFactory require './repos_loading.coffee'
 
 Repos = React.createClass
   render: ->
-    {repoActions, username, repo, token} = @props
+    {repoActions, pageLocationActions, username, repo, token} = @props
     {setRepoStatus} = repoActions
+    {goToRepo} = pageLocationActions
     div {},
       if repo.get 'loaded'
         RepoList {
@@ -16,12 +17,14 @@ Repos = React.createClass
           setRepoStatus,
           token,
           username
+          goToRepo
         }
       else
         ReposLoading {}
 
 Repos.propTypes =
   repoActions: PropTypes.object.isRequired
+  pageLocationActions: PropTypes.object.isRequired
   repo: PropTypes.object.isRequired
   token: PropTypes.string.isRequired
   username: PropTypes.string.isRequired
