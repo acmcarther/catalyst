@@ -3,6 +3,8 @@ Jwt = require 'jwt-simple'
 
 types = require '../constants/action_types.coffee'
 
+{getRepos} = require './repo.coffee'
+
 LoginActions =
   logIn: (username, password) ->
     (dispatch) ->
@@ -11,12 +13,15 @@ LoginActions =
         user: 'test-user'
         role: 'user'
 
-      Promise.resolve({
+      logInResult = Promise.resolve({
         type: types.LOG_IN
         token: Jwt.encode payload, 'dummy-secret', 'HS512'
         username
       })
-      .then dispatch
+
+      logInResult.then dispatch
+      logInResult.then ({token}) ->
+        setTimeout (=> getRepos(token)(dispatch)), 5000
 
   logOut: -> type: types.LOG_OUT
 

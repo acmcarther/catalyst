@@ -9,9 +9,9 @@ LoginForm = React.createClass
     username: ''
     password: ''
 
-  onSubmitClick: ->
+  onSubmitClick: (logIn) ->
     return if isEmpty(@state.username) or isEmpty(@state.password)
-    loginActions.logIn @state.username, @state.password
+    logIn @state.username, @state.password
     @setState username: '', password: ''
 
   render: ->
@@ -32,7 +32,7 @@ LoginForm = React.createClass
           onBlur: (e) => @setState password: e.target.value
 
       button
-        onClick: => @onSubmitClick()
+        onClick: => @onSubmitClick loginActions.logIn
         'Submit'
 
 LoginForm.propTypes = loginActions: PropTypes.object.isRequired
