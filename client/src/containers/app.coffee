@@ -9,16 +9,18 @@ Footer = React.createFactory require '../components/footer/footer.coffee'
 MainSection = React.createFactory require '../components/main_section/main_section.coffee'
 LoginActions = require '../actions/login.coffee'
 PageLocationActions = require '../actions/page_location.coffee'
+RepoActions = require '../actions/repo.coffee'
 
 App = React.createClass
   render: ->
-    {login, pageLocation, dispatch} = @props
+    {repo, login, pageLocation, dispatch} = @props
     loginActions = bindActionCreators LoginActions, dispatch
     pageLocationActions = bindActionCreators PageLocationActions, dispatch
+    repoActions = bindActionCreators RepoActions, dispatch
 
     div {},
       Header {login, loginActions, pageLocationActions}
-      MainSection {pageLocation, loginActions}
+      MainSection {login, repo, repoActions, pageLocation, loginActions}
 
 App.propTypes =
   dispatch: PropTypes.func.isRequired
@@ -26,5 +28,6 @@ App.propTypes =
 select = (state) ->
   login: state.login
   pageLocation: state.pageLocation
+  repo: state.repo
 
 module.exports = connect(select)(App)

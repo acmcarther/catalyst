@@ -7,7 +7,7 @@ require './headerbar.styl'
 HeaderBar = React.createClass
   render: ->
     {login, loginActions, pageLocationActions} = @props
-    username = login.getIn ['login', 'username']
+    username = login.get 'username'
     div className: 'top-bar',
       if username?
         span
