@@ -48,9 +48,6 @@ pub fn spawn_listener(
   let mut router = Router::new();
   let mut mount = Mount::new();
 
-  // TODO: Remove source serving
-  mount.mount("/client/", Static::new(Path::new("client/")));
-  mount.mount("/src/", Static::new(Path::new("src/")));
   mount.mount("/api_v1/", api::get_api_handler());
   mount.mount("/github_webhooks", webhooks::get_webhook_handler(issue_comment_tx, pull_request_tx, pull_request_review_tx));
   mount.mount("/assets/", Static::new(Path::new("client/dist/")));
