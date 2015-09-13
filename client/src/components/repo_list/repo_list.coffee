@@ -2,9 +2,11 @@ React = require 'react'
 PropTypes = React.PropTypes
 {div, span, input} = React.DOM
 
+RepoList = React.createFactory require './repo_list.coffee'
+
 RepoList = React.createClass
   render: ->
-    {setRepoStatus, username, repos, token} = @props
+    {setRepoStatus, goToRepo, username, repos, token} = @props
     div {},
       if repos.isEmpty()
         div {},
@@ -14,15 +16,19 @@ RepoList = React.createClass
         div {},
           repos.map (repo, idx) ->
             repoActive = repo.get 'active'
+            repoId = repo.get 'id'
             div key: idx,
-              span {}, repo.get 'name'
+              span
+                onClick: -> goToRepo repo.get 'id'
+                repo.get 'name'
               input
                 type: 'checkbox'
                 checked: repoActive
-                onChange: -> setRepoStatus not repoActive, token
+                onChange: (e) -> setRepoStatus repoId, e.target.value, token
 
 RepoList.propTypes =
   setRepoStatus: PropTypes.func.isRequired
+  goToRepo: PropTypes.func.isRequired
   username: PropTypes.string.isRequired
   repos: PropTypes.object.isRequired
   token: PropTypes.string.isRequired

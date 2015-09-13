@@ -21,4 +21,3 @@ React.render(
         DevTools {store, monitor: LogMonitor})
   , document.body
 )
-
