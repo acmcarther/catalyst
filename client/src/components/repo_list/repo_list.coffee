@@ -16,6 +16,7 @@ RepoList = React.createClass
         div {},
           repos.map (repo, idx) ->
             repoActive = repo.get 'active'
+            repoId = repo.get 'id'
             div key: idx,
               span
                 onClick: -> goToRepo repo.get 'id'
@@ -23,7 +24,7 @@ RepoList = React.createClass
               input
                 type: 'checkbox'
                 checked: repoActive
-                onChange: -> setRepoStatus not repoActive, token
+                onChange: (e) -> setRepoStatus repoId, e.target.value, token
 
 RepoList.propTypes =
   setRepoStatus: PropTypes.func.isRequired

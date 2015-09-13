@@ -30,7 +30,12 @@ MainSection = React.createClass
               Home {}
           when 'help' then Help {}
           when 'login' then LoginForm { loginActions }
-          when 'repo' then SingleRepo { repo, repoActions, pageLocation }
+          when 'repo' then SingleRepo {
+            token: login.get 'token'
+            repo,
+            repoActions,
+            pageLocation
+          }
       div {}, Footer {}
 
 MainSection.propTypes =
