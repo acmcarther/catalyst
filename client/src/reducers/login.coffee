@@ -1,7 +1,7 @@
 Immutable = require 'immutable'
 Jwt = require 'jwt-simple'
 
-{LOG_IN, LOG_OUT} = require '../constants/action_types.coffee'
+{LOG_IN, LOG_OUT, REGISTER} = require '../constants/action_types.coffee'
 
 initialState = Immutable.fromJS
   token: null
@@ -15,7 +15,7 @@ handleLogin = (state, action) ->
 
 login = (state = initialState, action) ->
   switch action.type
-    when LOG_IN
+    when LOG_IN, REGISTER
       handleLogin state, action
     when LOG_OUT
       state.merge

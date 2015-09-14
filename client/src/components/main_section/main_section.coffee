@@ -4,6 +4,7 @@ PropTypes = React.PropTypes
 
 require './main_section.styl'
 LoginForm = React.createFactory require './login_form.coffee'
+RegisterForm = React.createFactory require './registration_form.coffee'
 Home = React.createFactory require './home.coffee'
 Help = React.createFactory require './help.coffee'
 Footer = React.createFactory require '../footer/footer.coffee'
@@ -12,7 +13,7 @@ SingleRepo = React.createFactory require '../repo_list/single_repo.coffee'
 
 MainSection = React.createClass
   render: ->
-    {repo, repoActions, login, pageLocation, pageLocationActions,loginActions} = @props
+    {repo, repoActions, login, pageLocation, pageLocationActions,loginActions, registerActions} = @props
     username = login.get 'username'
     div {},
       div className: 'main-body',
@@ -30,6 +31,7 @@ MainSection = React.createClass
               Home {}
           when 'help' then Help {}
           when 'login' then LoginForm { loginActions }
+          when 'registration' then RegisterForm { registerActions }
           when 'repo' then SingleRepo {
             token: login.get 'token'
             repo,
@@ -45,5 +47,6 @@ MainSection.propTypes =
   loginActions: PropTypes.object.isRequired
   pageLocation: PropTypes.object.isRequired
   pageLocationActions: PropTypes.object.isRequired
+  registerActions: PropTypes.object.isRequired
 
 module.exports = MainSection
