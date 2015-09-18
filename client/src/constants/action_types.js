@@ -1,4 +1,4 @@
-module.exports = {
+const types = {
   GO_TO_LOG_IN: 'GO_TO_LOG_IN',
   GO_TO_REGISTER: 'GO_TO_REGISTER',
   GO_TO_HOME: 'GO_TO_HOME',
@@ -9,3 +9,6 @@ module.exports = {
   GET_REPOS: 'GET_REPOS',
   GO_TO_REPO: 'GO_TO_REPO'
 }
+
+
+export default types
