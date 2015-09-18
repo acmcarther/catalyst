@@ -35,8 +35,6 @@ class MainSection extends Component {
 
     var username = login.get('username')
 
-    console.log(pageLocation.get('currentPage'))
-
     return (
       <div>
         <div className='main-body'>

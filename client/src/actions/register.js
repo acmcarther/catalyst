@@ -3,6 +3,7 @@ import Jwt from 'jwt-simple'
 import types from '../constants/action_types'
 import { getRepos } from './repo'
 
+
 RegisterActions = {
   register (username, password) {
     return (dispatch) => {
@@ -24,5 +25,6 @@ RegisterActions = {
     }
   }
 }
+
 
 module.exports = RegisterActions
