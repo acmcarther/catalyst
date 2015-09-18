@@ -27,10 +27,15 @@ HeaderBar = React.createClass
           onClick: -> loginActions.logOut()
           'Log out'
       else
-        span
-          className: 'header-elem clickable',
-          onClick: -> pageLocationActions.goToLogIn()
-          'Login'
+        span {},
+          span
+            className: 'header-elem clickable',
+            onClick: -> pageLocationActions.goToLogIn()
+            'Login'
+          span
+            className: 'header-elem clickable',
+            onClick: -> pageLocationActions.goToRegistration()
+            'Register'
 
 HeaderBar.propTypes =
   loginActions: PropTypes.object.isRequired

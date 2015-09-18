@@ -10,6 +10,7 @@ MainSection = React.createFactory require '../components/main_section/main_secti
 LoginActions = require '../actions/login.coffee'
 PageLocationActions = require '../actions/page_location.coffee'
 RepoActions = require '../actions/repo.coffee'
+RegisterActions = require '../actions/register.coffee'
 
 App = React.createClass
   render: ->
@@ -17,10 +18,11 @@ App = React.createClass
     loginActions = bindActionCreators LoginActions, dispatch
     pageLocationActions = bindActionCreators PageLocationActions, dispatch
     repoActions = bindActionCreators RepoActions, dispatch
+    registerActions = bindActionCreators RegisterActions, dispatch
 
     div {},
       Header {login, loginActions, pageLocationActions}
-      MainSection {login, repo, repoActions, pageLocation, loginActions, pageLocationActions}
+      MainSection {login, repo, repoActions, pageLocation, loginActions, pageLocationActions, registerActions}
 
 App.propTypes =
   dispatch: PropTypes.func.isRequired
