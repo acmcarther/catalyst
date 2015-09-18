@@ -22,7 +22,6 @@ RegisterForm = React.createClass
     {registerActions} = @props
     div {},
       div {}, 'Register'
-
       span {},
         label {}, 'Username:'
         input
@@ -35,14 +34,12 @@ RegisterForm = React.createClass
           type: 'password'
           placeholder: 'Password'
           onBlur: (e) => @setState password: e.target.value
-
       span {},
         label {}, 'Password Again:'
         input
           type: 'password'
           placeholder: 'Password again'
           onBlur: (e) => @setState passwordVerification: e.target.value
-
       button
         onClick: => @onSubmitClick registerActions.register
         'Submit'

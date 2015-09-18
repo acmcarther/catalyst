@@ -13,7 +13,7 @@ RegisterActions =
         role: 'user'
 
       registerResult = Promise.resolve({
-        type: types.REGISTER
+        type: types.REGISTER_SUCCESS
         token: Jwt.encode payload, 'dummy-secret', 'HS512'
         username
       })

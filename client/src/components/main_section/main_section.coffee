@@ -1,8 +1,8 @@
 React = require 'react'
 PropTypes = React.PropTypes
-{div} = React.DOM
-
 require './main_section.styl'
+
+{div} = React.DOM
 LoginForm = React.createFactory require './login_form.coffee'
 RegisterForm = React.createFactory require './registration_form.coffee'
 Home = React.createFactory require './home.coffee'
