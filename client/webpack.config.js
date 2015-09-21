@@ -5,7 +5,7 @@ module.exports = {
   entry: [
     'webpack-dev-server/client?http://0.0.0.0:3000', // WebpackDevServer host and port
     'webpack/hot/only-dev-server', // "only" prevents reload on syntax errors
-    './src/index.coffee'
+    './src/index.js'
   ],
   devtool: "eval",
   debug: true,
@@ -26,12 +26,17 @@ module.exports = {
     })
   ],
   resolve: {
-    extensions: ['', '.js', '.coffee', '.styl']
+    extensions: ['', '.js', '.styl']
   },
   module: {
     loaders: [
       { test: /\.styl$/, loader: 'style-loader!css-loader!stylus-loader' },
-      { test: /\.coffee$/, loaders: ['react-hot', 'coffee'] }
+      {
+        test: /\.js/,
+        loaders: [/*'react-hot', */'babel-loader'],
+        include: path.join(__dirname, 'src'),
+        exclude: /node_modules/
+      }
     ]
   }
 }
