@@ -33,7 +33,7 @@ module.exports = {
       { test: /\.styl$/, loader: 'style-loader!css-loader!stylus-loader' },
       {
         test: /\.js/,
-        loaders: [/*'react-hot', */'babel-loader'],
+        loaders: ['react-hot', 'babel-loader'],
         include: path.join(__dirname, 'src'),
         exclude: /node_modules/
       }
