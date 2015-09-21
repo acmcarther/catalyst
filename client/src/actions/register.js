@@ -4,7 +4,7 @@ import types from '../constants/action_types'
 import { getRepos } from './repo'
 
 
-RegisterActions = {
+var RegisterActions = {
   register (username, password) {
     return (dispatch) => {
       var payload = {
