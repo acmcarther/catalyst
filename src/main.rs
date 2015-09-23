@@ -9,7 +9,7 @@ extern crate mount;
 
 mod listening;
 mod sending;
-mod api;
+mod client_api;
 mod webhooks;
 
 use std::sync::mpsc::channel;
