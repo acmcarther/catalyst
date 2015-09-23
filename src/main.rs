@@ -8,6 +8,10 @@ extern crate staticfile;
 extern crate mount;
 extern crate rand;
 
+#[cfg(test)]
+#[macro_use(expect)]
+extern crate expectest;
+
 mod listening;
 mod sending;
 mod client_api;

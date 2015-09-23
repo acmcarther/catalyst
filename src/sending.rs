@@ -1,13 +1,10 @@
-use github_v3::IssueCommenter;
 use github_v3::Authorization;
 use github_v3::github_client::GithubClient;
-use github_v3::types::repos::Repository;
 use github_v3::types::pull_requests::{
   PullRequestEvent,
 };
 use github_v3::types::comments::{
   IssueCommentEvent,
-  CreateIssueComment,
   PullRequestReviewCommentEvent,
 };
 
