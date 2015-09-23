@@ -6,11 +6,13 @@ extern crate rustc_serialize;
 extern crate itertools;
 extern crate staticfile;
 extern crate mount;
+extern crate rand;
 
 mod listening;
 mod sending;
 mod client_api;
 mod webhooks;
+mod tag_reviewers;
 
 use std::sync::mpsc::channel;
 

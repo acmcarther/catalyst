@@ -11,6 +11,7 @@ router = "*"
 staticfile = "*"
 itertools = "*"
 mount = "*"
+rand = "*"
 
 [dependencies.github_v3]
 git = "https://github.com/acmcarther/github_v3_rust"
