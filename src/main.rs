@@ -12,6 +12,10 @@ extern crate rand;
 #[macro_use(expect)]
 extern crate expectest;
 
+#[cfg(test)]
+#[macro_use(create_stub, instrument_stub, impl_helper)]
+extern crate rusty_mock;
+
 mod listening;
 mod sending;
 mod client_api;
