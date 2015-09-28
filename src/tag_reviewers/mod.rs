@@ -115,26 +115,55 @@ mod tests {
     }
   }
 
-  #[test]
-  fn it_does_nothing_when_the_review_caller_string_is_not_present() {
+  fn default_stub() -> IssueCommenterStub {
     let mut stub = IssueCommenterStub::new();
     stub.create_comment.returns(Err(GitErr::NotImplemented("Testing".to_owned())));
+    stub
+  }
+
+  #[test]
+  fn it_does_nothing_when_the_review_caller_string_is_not_present() {
+    let mut stub = default_stub();
+
     easy_tag(1, "repo_name".to_owned(), "user_name".to_owned(), "comment".to_owned(), &stub);
     expect!(stub.create_comment.was_called()).to(be_equal_to(false));
   }
 
   #[test]
+  fn it_calls_create_comment_with_the_issue() {
+    let mut stub = default_stub();
+
+    easy_tag(1, "repo_name".to_owned(), "user_name".to_owned(), "pt r?".to_owned(), &stub);
+    let repository = Repository { owner: "user_name".to_owned(), repo_name: "repo_name".to_owned() };
+    expect!(stub.create_comment.was_called_once()).to(be_equal_to(true));
+    let (_, issue_id, _) = stub.create_comment.get_args_for_call(0).unwrap();
+    expect!(issue_id).to(be_equal_to(1));
+  }
+
+  #[test]
+  fn it_calls_create_comment_with_the_repo() {
+    let mut stub = default_stub();
+
+    easy_tag(1, "repo_name".to_owned(), "user_name".to_owned(), "pt r?".to_owned(), &stub);
+    expect!(stub.create_comment.was_called_once()).to(be_equal_to(true));
+    let (repo, _, _) = stub.create_comment.get_args_for_call(0).unwrap();
+    let expected_repo = Repository { owner: "user_name".to_owned(), repo_name: "repo_name".to_owned() };
+    expect!(repo).to(be_equal_to(expected_repo));
+  }
+
+
+  #[test]
   fn it_does_nothing_when_two_people_already_tagged() {
-    let mut stub = IssueCommenterStub::new();
-    stub.create_comment.returns(Err(GitErr::NotImplemented("Testing".to_owned())));
+    let mut stub = default_stub();
+
     easy_tag(1, "repo_name".to_owned(), "user_name".to_owned(), "pt r? @1 @2".to_owned(), &stub);
     expect!(stub.create_comment.was_called()).to(be_equal_to(false));
   }
 
   #[test]
   fn it_tags_someone_if_one_person_was_tagged() {
-    let mut stub = IssueCommenterStub::new();
-    stub.create_comment.returns(Err(GitErr::NotImplemented("Testing".to_owned())));
+    let mut stub = default_stub();
+
     easy_tag(1, "repo_name".to_owned(), "user_name".to_owned(), "pt r? @1".to_owned(), &stub);
     expect!(stub.create_comment.was_called_once()).to(be_equal_to(true));
     let (_, _, call_comment) = stub.create_comment.get_args_for_call(0).unwrap();
@@ -144,22 +173,17 @@ mod tests {
 
   #[test]
   fn it_tags_two_people_if_nobody_was_tagged() {
-    let mut stub = IssueCommenterStub::new();
-    stub.create_comment.returns(Err(GitErr::NotImplemented("Testing".to_owned())));
-    easy_tag(1, "repo_name".to_owned(), "user_name".to_owned(), "pt r?".to_owned(), &stub);
+    let mut stub = default_stub();
 
+    easy_tag(1, "repo_name".to_owned(), "user_name".to_owned(), "pt r?".to_owned(), &stub);
     expect!(stub.create_comment.was_called()).to(be_equal_to(true));
     let (_, _, call_comment) = stub.create_comment.get_args_for_call(0).unwrap();
-
-    // We assert that both people got tagged
     expect!(call_comment.body.contains("@acmcarther") && call_comment.body.contains("@seanstrom")).to(be_equal_to(true));
   }
 
   #[test]
   fn it_does_not_retag_people_already_tagged() {
-    let mut stub = IssueCommenterStub::new();
-    stub.create_comment.returns(Err(GitErr::NotImplemented("Testing".to_owned())));
-
+    let mut stub = default_stub();
 
     // Since tagging is randomized, we should get a "significant" sample to verify this test
     for call_idx in 0..10 {
