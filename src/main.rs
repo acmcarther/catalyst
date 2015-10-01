@@ -26,14 +26,14 @@ use commenter::Commenter;
 use std::sync::mpsc::channel;
 
 fn main() {
-  let (issue_comment_tx, issue_comment_rx) = channel();
-  let (pull_request_tx, pull_request_rx) = channel();
-  let (pull_request_review_tx, pull_request_review_rx) = channel();
+  let (event_tx, event_rx) = channel();
 
-  let commenter = Commenter::new(issue_comment_rx, pull_request_rx, pull_request_review_rx);
-
+  let commenter = Commenter::new(event_rx);
   let commenter_join_guard = commenter.start();
 
-  listening::spawn_listener(issue_comment_tx, pull_request_tx, pull_request_review_tx).http("0.0.0.0:8080").unwrap();
+  listening::spawn_listener(event_tx)
+    .http("0.0.0.0:8080")
+    .unwrap();
 
+  commenter_join_guard.join().unwrap();
 }

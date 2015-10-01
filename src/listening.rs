@@ -11,16 +11,12 @@ use std::sync::mpsc::Sender;
 use std::fs::File;
 use std::path::Path;
 
-use github_v3::types::comments::{
-  IssueCommentEvent,
-  PullRequestReviewCommentEvent,
-};
-use github_v3::types::pull_requests::PullRequestEvent;
-
 use std::io::Error as IoError;
 
 use client_api;
 use webhooks;
+
+use commenter::types::HandledGithubEvents;
 
 fn serve_file(file_path: &str) -> Result<String, IoError> {
   let mut s = String::new();
@@ -40,16 +36,14 @@ fn handle_root(_: &mut Request) -> IronResult<Response> {
 }
 
 pub fn spawn_listener(
-  issue_comment_tx: Sender<IssueCommentEvent>,
-  pull_request_tx: Sender<PullRequestEvent>,
-  pull_request_review_tx: Sender<PullRequestReviewCommentEvent>
+  event_tx: Sender<HandledGithubEvents>,
   ) -> Iron<Mount> {
 
   let mut router = Router::new();
   let mut mount = Mount::new();
 
   mount.mount("/api_v1/", client_api::get_api_handler());
-  mount.mount("/github_webhooks", webhooks::get_webhook_handler(issue_comment_tx, pull_request_tx, pull_request_review_tx));
+  mount.mount("/github_webhooks", webhooks::get_webhook_handler(event_tx));
   mount.mount("/assets/", Static::new(Path::new("client/dist/")));
   router.get("/", handle_root);
   mount.mount("/", router);
