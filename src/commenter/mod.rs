@@ -30,6 +30,7 @@ pub struct Commenter {
 
 impl Commenter {
   pub fn new(event_rx: Receiver<types::HandledGithubEvents>,) -> Commenter {
+    // TODO:  Parameterize off of these, don't read them from environment
     let token = env::var("CATALYST_GITHUB_OAUTH_TOKEN").unwrap_or("dummy_token".to_owned());
     let repo_owner = env::var("CATALYST_REPO_OWNER").unwrap_or("dummy_owner".to_owned());
     let repo_name = env::var("CATALYST_REPO_NAME").unwrap_or("dummy_repo".to_owned());
@@ -47,7 +48,6 @@ impl Commenter {
   }
 
   pub fn start(mut self) -> JoinHandle<()> {
-    // TODO:  Parameterize off of these, don't read them from environment
     thread::spawn (move || {
       let mut channels_up = true;
       while channels_up {
