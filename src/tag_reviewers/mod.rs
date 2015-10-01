@@ -151,7 +151,6 @@ mod tests {
     expect!(repo).to(be_equal_to(expected_repo));
   }
 
-
   #[test]
   fn it_does_nothing_when_two_people_already_tagged() {
     let mut stub = default_stub();
