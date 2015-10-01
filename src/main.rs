@@ -17,10 +17,11 @@ extern crate expectest;
 extern crate rusty_mock;
 
 mod listening;
-mod sending;
 mod client_api;
 mod webhooks;
-mod tag_reviewers;
+mod commenter;
+
+use commenter::Commenter;
 
 use std::sync::mpsc::channel;
 
@@ -29,7 +30,9 @@ fn main() {
   let (pull_request_tx, pull_request_rx) = channel();
   let (pull_request_review_tx, pull_request_review_rx) = channel();
 
-  let sender = sending::spawn_sender(issue_comment_rx, pull_request_rx, pull_request_review_rx);
+  let commenter = Commenter::new(issue_comment_rx, pull_request_rx, pull_request_review_rx);
+
+  let commenter_join_guard = commenter.start();
 
   listening::spawn_listener(issue_comment_tx, pull_request_tx, pull_request_review_tx).http("0.0.0.0:8080").unwrap();
 

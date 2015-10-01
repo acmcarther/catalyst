@@ -113,7 +113,6 @@ impl AfterMiddleware for DeliverActionables {
       Some(EventType::IssueComment) => {
         let possible_payload = req.extensions.remove::<IsIssueComment>();
         possible_payload.map(|payload: IssueCommentEvent| self.issue_comment_tx.lock().map(|sender| sender.send(payload)));
-
       },
       Some(EventType::PullRequestReviewComment) => {
         let possible_payload = req.extensions.remove::<IsPullRequestReviewComment>();
