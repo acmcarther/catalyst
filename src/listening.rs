@@ -19,7 +19,7 @@ use github_v3::types::pull_requests::PullRequestEvent;
 
 use std::io::Error as IoError;
 
-use api;
+use client_api;
 use webhooks;
 
 fn serve_file(file_path: &str) -> Result<String, IoError> {
@@ -48,7 +48,7 @@ pub fn spawn_listener(
   let mut router = Router::new();
   let mut mount = Mount::new();
 
-  mount.mount("/api_v1/", api::get_api_handler());
+  mount.mount("/api_v1/", client_api::get_api_handler());
   mount.mount("/github_webhooks", webhooks::get_webhook_handler(issue_comment_tx, pull_request_tx, pull_request_review_tx));
   mount.mount("/assets/", Static::new(Path::new("client/dist/")));
   router.get("/", handle_root);

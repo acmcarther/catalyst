@@ -6,11 +6,21 @@ extern crate rustc_serialize;
 extern crate itertools;
 extern crate staticfile;
 extern crate mount;
+extern crate rand;
+
+#[cfg(test)]
+#[macro_use(expect)]
+extern crate expectest;
+
+#[cfg(test)]
+#[macro_use(create_stub, instrument_stub, impl_helper)]
+extern crate rusty_mock;
 
 mod listening;
 mod sending;
-mod api;
+mod client_api;
 mod webhooks;
+mod tag_reviewers;
 
 use std::sync::mpsc::channel;
 

@@ -1,13 +1,10 @@
-use github_v3::IssueCommenter;
 use github_v3::Authorization;
 use github_v3::github_client::GithubClient;
-use github_v3::types::repos::Repository;
 use github_v3::types::pull_requests::{
   PullRequestEvent,
 };
 use github_v3::types::comments::{
   IssueCommentEvent,
-  CreateIssueComment,
   PullRequestReviewCommentEvent,
 };
 
@@ -18,6 +15,8 @@ use std::collections::HashMap;
 use std::sync::mpsc::{Receiver, TryRecvError};
 
 use itertools::Itertools;
+
+use tag_reviewers;
 
 type RepoFullName = String;
 type RepoStatistics = ();
@@ -53,17 +52,7 @@ pub fn spawn_sender(
         .ok()
         .iter()
         .filter(|issue_comment| contains_monitored_repo(issue_comment, &monitored_repos))
-        .foreach(|issue_comment| {
-          if issue_comment.comment.body.clone().contains("pt r?") {
-            let issue_id = issue_comment.issue.number.clone();
-            let name = issue_comment.repository.name.clone();
-            let owner = issue_comment.repository.owner.login.clone();
-            let repo = Repository{ owner: owner, repo_name: name };
-            let response = CreateIssueComment { body: "PTBOT: Assigning @acmcarther to this PR".to_owned() };
-            println!("LOG: Received a request for reviewers on issue {}, assigning @acmcarther", issue_id);
-            let _ = client.create_comment(repo, issue_id, response);
-          }
-        });
+        .foreach(|issue_comment| tag_reviewers::tag(&issue_comment, &client));
       let _ = possible_pull_request.map_err(|err| if err == TryRecvError::Disconnected {channels_up = false});
       let _ = possible_pull_request_review.map_err(|err| if err == TryRecvError::Disconnected {channels_up = false});
 
