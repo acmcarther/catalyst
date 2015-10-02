@@ -176,7 +176,7 @@ mod tests {
 
   #[test]
   fn it_does_not_retag_people_already_tagged() {
-    let mut stub = default_stub();
+    let stub = default_stub();
 
     // Since tagging is randomized, we should get a "significant" sample to verify this test
     for call_idx in 0..10 {

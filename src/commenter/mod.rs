@@ -51,30 +51,41 @@ impl Commenter {
     thread::spawn (move || {
       let mut channels_up = true;
       while channels_up {
-        channels_up = self.check_event_stream();
+        channels_up = self.check_event_stream(review_tagger::tag);
         thread::sleep_ms(2000);
       }
     })
   }
 
 
-  pub fn check_event_stream(&mut self) -> bool {
+  pub fn check_event_stream<T: Fn(&IssueCommentEvent, &GithubClient<String>)>(&mut self, tagger: T) -> bool {
     let possible_event = self.event_rx.try_recv();
 
     match possible_event {
       Err(err) => !(err == TryRecvError::Disconnected),
       Ok(event) => {
         match event {
-          types::HandledGithubEvents::PullRequestReviewCommentEvent(_) => (),
-          types::HandledGithubEvents::PullRequestEvent(_) => (),
           types::HandledGithubEvents::IssueCommentEvent(ref e) => {
             if contains_monitored_repo(e, &self.monitored_repos) {
-              review_tagger::tag(e, &self.client);
+              tagger(e, &self.client);
             }
           },
+          _ => ()
         }
         true
       }
     }
   }
+}
+
+#[cfg(test)]
+mod tests {
+  use rusty_mock::*;
+  use github_v3::github_client::GithubClient;
+  use github_v3::types::comments::IssueCommentEvent;
+
+  type TaggerStub = InterceptingStub<(), Fn(&IssueCommentEvent, &GithubClient<String>)>;
+
+  // TODO: Figure out how to test this without building a full IssueCommentEvent, since those are
+  //   huge
 }
