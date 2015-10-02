@@ -18,8 +18,7 @@ git = "https://github.com/acmcarther/github_v3_rust"
 rev = "909f28c23e9bebb10bd3a19739d7238049f53ad4"
 
 [dev-dependencies.rusty-mock]
-git = "https://github.com/acmcarther/rusty-mock"
-rev = "f9483437d231e59d9e6b71b02a7d2125fd86532d"
+path = "../rusty-mock"
 
 [dev-dependencies]
 expectest = "*"

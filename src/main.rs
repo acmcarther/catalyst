@@ -13,7 +13,7 @@ extern crate rand;
 extern crate expectest;
 
 #[cfg(test)]
-#[macro_use(create_stub, instrument_stub, impl_helper)]
+#[macro_use]
 extern crate rusty_mock;
 
 mod listening;

@@ -60,6 +60,8 @@ pub fn easy_tag<T:IssueCommenter>(issue_id: IssueId, repo_name: RepoName, user_n
 
 #[cfg(test)]
 mod tests {
+  use rusty_mock::*;
+
   use expectest::core::expect;
   use expectest::matchers::be_equal_to;
 
@@ -69,10 +71,6 @@ mod tests {
 
   use github_v3::IssueCommenter;
   use github_v3::types::repos::Repository;
-
-  use rand::{thread_rng, sample};
-
-  use itertools::Itertools;
 
   use github_v3::types::{
     GitErr,
@@ -89,29 +87,26 @@ mod tests {
     IssueComment,
   };
 
-  use std::io::ErrorKind;
+  struct IssueCommenterStub {
+    create_comment: ArgWatchingStub<Result<IssueComment, GitErr>, (Repository, IssueId, CreateIssueComment)>
+  }
 
-  use rusty_mock::StubHelper;
-
-  create_stub! {
-    IssueCommenterStub {
-      list_in_issue(Repository, IssueId, Option<ListIssueCommentsQuery>) -> Result<Vec<IssueComment>, GitErr>,
-      list_in_repo(Repository, Option<ListRepoCommentsQuery>) -> Result<Vec<IssueComment>, GitErr>,
-      get_comment(Repository, CommentId) -> Result<IssueComment, GitErr>,
-      create_comment(Repository, IssueId, CreateIssueComment) -> Result<IssueComment, GitErr>,
-      edit_comment(Repository, CommentId, EditComment) -> Result<IssueComment, GitErr>,
-      delete_comment(Repository, CommentId) -> Result<DeleteCommentStatus, GitErr>
+  impl IssueCommenterStub {
+    fn new() -> IssueCommenterStub {
+      IssueCommenterStub {
+        create_comment: ArgWatchingStub::new()
+      }
     }
   }
 
   instrument_stub! {
     IssueCommenterStub as IssueCommenter {
-      {stub create_comment(&self, repo: Repository, issue_id: IssueId, details: CreateIssueComment) -> Result<IssueComment, GitErr>}
-      {nostub list_in_issue(&self, repo: Repository, issue_id: IssueId, query: Option<ListIssueCommentsQuery>) -> Result<Vec<IssueComment>, GitErr>}
-      {nostub list_in_repo(&self, repo: Repository, query: Option<ListRepoCommentsQuery>) -> Result<Vec<IssueComment>, GitErr>}
-      {nostub get_comment(&self, repo: Repository, comment_id: CommentId) -> Result<IssueComment, GitErr>}
-      {nostub edit_comment(&self, repo: Repository, comment_id: CommentId, details: EditComment) -> Result<IssueComment, GitErr>}
-      {nostub delete_comment(&self, repo: Repository, comment_id: CommentId) -> Result<DeleteCommentStatus, GitErr>}
+      {ArgWatchingStub: create_comment(&self, repo: Repository, issue_id: IssueId, details: CreateIssueComment) -> Result<IssueComment, GitErr>}
+      {nostub: list_in_issue(&self, repo: Repository, issue_id: IssueId, query: Option<ListIssueCommentsQuery>) -> Result<Vec<IssueComment>, GitErr>}
+      {nostub: list_in_repo(&self, repo: Repository, query: Option<ListRepoCommentsQuery>) -> Result<Vec<IssueComment>, GitErr>}
+      {nostub: get_comment(&self, repo: Repository, comment_id: CommentId) -> Result<IssueComment, GitErr>}
+      {nostub: edit_comment(&self, repo: Repository, comment_id: CommentId, details: EditComment) -> Result<IssueComment, GitErr>}
+      {nostub: delete_comment(&self, repo: Repository, comment_id: CommentId) -> Result<DeleteCommentStatus, GitErr>}
     }
   }
 
@@ -123,7 +118,7 @@ mod tests {
 
   #[test]
   fn it_does_nothing_when_the_review_caller_string_is_not_present() {
-    let mut stub = default_stub();
+    let stub = default_stub();
 
     easy_tag(1, "repo_name".to_owned(), "user_name".to_owned(), "comment".to_owned(), &stub);
     expect!(stub.create_comment.was_called()).to(be_equal_to(false));
@@ -131,10 +126,9 @@ mod tests {
 
   #[test]
   fn it_calls_create_comment_with_the_issue() {
-    let mut stub = default_stub();
+    let stub = default_stub();
 
     easy_tag(1, "repo_name".to_owned(), "user_name".to_owned(), "pt r?".to_owned(), &stub);
-    let repository = Repository { owner: "user_name".to_owned(), repo_name: "repo_name".to_owned() };
     expect!(stub.create_comment.was_called_once()).to(be_equal_to(true));
     let (_, issue_id, _) = stub.create_comment.get_args_for_call(0).unwrap();
     expect!(issue_id).to(be_equal_to(1));
@@ -142,7 +136,7 @@ mod tests {
 
   #[test]
   fn it_calls_create_comment_with_the_repo() {
-    let mut stub = default_stub();
+    let stub = default_stub();
 
     easy_tag(1, "repo_name".to_owned(), "user_name".to_owned(), "pt r?".to_owned(), &stub);
     expect!(stub.create_comment.was_called_once()).to(be_equal_to(true));
@@ -153,7 +147,7 @@ mod tests {
 
   #[test]
   fn it_does_nothing_when_two_people_already_tagged() {
-    let mut stub = default_stub();
+    let stub = default_stub();
 
     easy_tag(1, "repo_name".to_owned(), "user_name".to_owned(), "pt r? @1 @2".to_owned(), &stub);
     expect!(stub.create_comment.was_called()).to(be_equal_to(false));
@@ -161,7 +155,7 @@ mod tests {
 
   #[test]
   fn it_tags_someone_if_one_person_was_tagged() {
-    let mut stub = default_stub();
+    let stub = default_stub();
 
     easy_tag(1, "repo_name".to_owned(), "user_name".to_owned(), "pt r? @1".to_owned(), &stub);
     expect!(stub.create_comment.was_called_once()).to(be_equal_to(true));
@@ -172,7 +166,7 @@ mod tests {
 
   #[test]
   fn it_tags_two_people_if_nobody_was_tagged() {
-    let mut stub = default_stub();
+    let stub = default_stub();
 
     easy_tag(1, "repo_name".to_owned(), "user_name".to_owned(), "pt r?".to_owned(), &stub);
     expect!(stub.create_comment.was_called()).to(be_equal_to(true));
