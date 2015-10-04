@@ -13,24 +13,36 @@ extern crate rand;
 extern crate expectest;
 
 #[cfg(test)]
-#[macro_use(create_stub, instrument_stub, impl_helper)]
+#[macro_use]
 extern crate rusty_mock;
 
+mod types;
 mod listening;
-mod sending;
 mod client_api;
 mod webhooks;
-mod tag_reviewers;
+mod commenter;
 
+use commenter::Commenter;
+
+use std::env;
 use std::sync::mpsc::channel;
 
 fn main() {
-  let (issue_comment_tx, issue_comment_rx) = channel();
-  let (pull_request_tx, pull_request_rx) = channel();
-  let (pull_request_review_tx, pull_request_review_rx) = channel();
+  let (event_tx, event_rx) = channel();
 
-  let sender = sending::spawn_sender(issue_comment_rx, pull_request_rx, pull_request_review_rx);
+  let auth_token = env::var("CATALYST_GITHUB_OAUTH_TOKEN").unwrap_or("dummy_token".to_owned());
+  let mut commenter = Commenter::new(event_rx, auth_token);
+  commenter.add_repo("acmcarther/catalyst", vec![
+    "acmcarther".to_owned(),
+    "seanstrom".to_owned(),
+    "rschifflin".to_owned()
+  ]);
 
-  listening::spawn_listener(issue_comment_tx, pull_request_tx, pull_request_review_tx).http("0.0.0.0:8080").unwrap();
+  let commenter_join_guard = commenter.start();
 
+  listening::spawn_listener(event_tx)
+    .http("0.0.0.0:8080")
+    .unwrap();
+
+  commenter_join_guard.join().unwrap();
 }

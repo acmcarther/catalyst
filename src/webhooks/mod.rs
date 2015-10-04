@@ -20,6 +20,8 @@ use github_v3::types::pull_requests::PullRequestEvent;
 
 use rustc_serialize::{json};
 
+use types::HandledGithubEvents;
+
 struct Deserialize;
 
 struct EventInfo;
@@ -101,9 +103,7 @@ impl BeforeMiddleware for Deserialize {
 }
 
 struct DeliverActionables {
-  issue_comment_tx: Mutex<Sender<IssueCommentEvent>>,
-  pull_request_review_tx: Mutex<Sender<PullRequestReviewCommentEvent>>,
-  pull_request_tx: Mutex<Sender<PullRequestEvent>>,
+  event_tx: Mutex<Sender<HandledGithubEvents>>,
 }
 
 impl AfterMiddleware for DeliverActionables {
@@ -112,16 +112,15 @@ impl AfterMiddleware for DeliverActionables {
     match possible_event_type {
       Some(EventType::IssueComment) => {
         let possible_payload = req.extensions.remove::<IsIssueComment>();
-        possible_payload.map(|payload: IssueCommentEvent| self.issue_comment_tx.lock().map(|sender| sender.send(payload)));
-
+        possible_payload.map(|payload: IssueCommentEvent| self.event_tx.lock().map(|sender| sender.send(HandledGithubEvents::IssueCommentEvent(payload))));
       },
       Some(EventType::PullRequestReviewComment) => {
         let possible_payload = req.extensions.remove::<IsPullRequestReviewComment>();
-        possible_payload.map(|payload: PullRequestReviewCommentEvent| self.pull_request_review_tx.lock().map(|sender| sender.send(payload)));
+        possible_payload.map(|payload: PullRequestReviewCommentEvent| self.event_tx.lock().map(|sender| sender.send(HandledGithubEvents::PullRequestReviewCommentEvent(payload))));
       },
       Some(EventType::PullRequest) => {
         let possible_payload = req.extensions.remove::<IsPullRequest>();
-        possible_payload.map(|payload: PullRequestEvent| self.pull_request_tx.lock().map(|sender| sender.send(payload)));
+        possible_payload.map(|payload: PullRequestEvent| self.event_tx.lock().map(|sender| sender.send(HandledGithubEvents::PullRequestEvent(payload))));
       },
       _ => ()
     }
@@ -143,15 +142,11 @@ fn handle_webhooks(req: &mut Request) -> IronResult<Response> {
 }
 
 pub fn get_webhook_handler(
-  issue_comment_tx: Sender<IssueCommentEvent>,
-  pull_request_tx: Sender<PullRequestEvent>,
-  pull_request_review_tx: Sender<PullRequestReviewCommentEvent>
+  event_tx: Sender<HandledGithubEvents>
   ) -> Router {
 
   let deliverer = DeliverActionables {
-    issue_comment_tx: Mutex::new(issue_comment_tx),
-    pull_request_tx: Mutex::new(pull_request_tx),
-    pull_request_review_tx: Mutex::new(pull_request_review_tx),
+    event_tx: Mutex::new(event_tx),
   };
 
   let mut webhook_chain = Chain::new(handle_webhooks);
