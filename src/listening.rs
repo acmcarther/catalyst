@@ -16,7 +16,7 @@ use std::io::Error as IoError;
 use client_api;
 use webhooks;
 
-use commenter::types::HandledGithubEvents;
+use types::HandledGithubEvents;
 
 fn serve_file(file_path: &str) -> Result<String, IoError> {
   let mut s = String::new();

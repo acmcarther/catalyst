@@ -20,7 +20,7 @@ use github_v3::types::pull_requests::PullRequestEvent;
 
 use rustc_serialize::{json};
 
-use commenter::types::HandledGithubEvents;
+use types::HandledGithubEvents;
 
 struct Deserialize;
 

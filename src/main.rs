@@ -16,6 +16,7 @@ extern crate expectest;
 #[macro_use]
 extern crate rusty_mock;
 
+mod types;
 mod listening;
 mod client_api;
 mod webhooks;
@@ -23,12 +24,20 @@ mod commenter;
 
 use commenter::Commenter;
 
+use std::env;
 use std::sync::mpsc::channel;
 
 fn main() {
   let (event_tx, event_rx) = channel();
 
-  let commenter = Commenter::new(event_rx);
+  let auth_token = env::var("CATALYST_GITHUB_OAUTH_TOKEN").unwrap_or("dummy_token".to_owned());
+  let mut commenter = Commenter::new(event_rx, auth_token);
+  commenter.add_repo("acmcarther/catalyst", vec![
+    "acmcarther".to_owned(),
+    "seanstrom".to_owned(),
+    "rschifflin".to_owned()
+  ]);
+
   let commenter_join_guard = commenter.start();
 
   listening::spawn_listener(event_tx)
