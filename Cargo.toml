@@ -15,7 +15,7 @@ rand = "*"
 
 [dependencies.github_v3]
 git = "https://github.com/acmcarther/github_v3_rust"
-rev = "909f28c23e9bebb10bd3a19739d7238049f53ad4"
+rev = "137f39fe57cefb634b7360793cd6872382d039f7"
 
 [dev-dependencies.rusty-mock]
 git = "https://github.com/acmcarther/rusty-mock"
