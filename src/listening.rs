@@ -43,7 +43,7 @@ pub fn spawn_listener(
   let mut mount = Mount::new();
 
   mount.mount("/api_v1/", client_api::get_api_handler());
-  mount.mount("/github_webhooks", webhooks::get_webhook_handler(event_tx));
+  mount.mount("/github_webhooks", webhooks::github_webhook_handler(event_tx));
   mount.mount("/assets/", Static::new(Path::new("client/dist/")));
   router.get("/", handle_root);
   mount.mount("/", router);

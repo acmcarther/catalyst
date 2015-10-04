@@ -21,6 +21,7 @@ mod listening;
 mod client_api;
 mod webhooks;
 mod commenter;
+mod continuous_integrator;
 
 use commenter::Commenter;
 
