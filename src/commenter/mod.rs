@@ -1,6 +1,5 @@
 mod model_builder;
 mod review_tagger;
-mod lint_watcher;
 
 use github_v3::Authorization;
 use github_v3::github_client::GithubClient;
@@ -18,21 +17,25 @@ use types::{
 
 use self::review_tagger::*;
 
+use continuous_integrator::types::Build;
+
 type RepoFullName = String;
 
 pub struct Commenter {
   event_rx: Receiver<HandledGithubEvents>,
+  build_rx: Receiver<Build>,
   monitored_repos: HashMap<RepoFullName, review_tagger::ReviewTagger>,
   client: GithubClient<String>
 }
 
 impl Commenter {
-  pub fn new(event_rx: Receiver<HandledGithubEvents>, auth_token: String) -> Commenter {
+  pub fn new(event_rx: Receiver<HandledGithubEvents>, build_rx: Receiver<Build>, auth_token: String) -> Commenter {
     let monitored_repos = HashMap::new();
     let client = GithubClient::new(Some(Authorization("token ".to_owned() + &auth_token)));
 
     Commenter {
       event_rx: event_rx,
+      build_rx: build_rx,
       monitored_repos: monitored_repos,
       client: client,
     }
@@ -46,7 +49,7 @@ impl Commenter {
     thread::spawn (move || {
       let mut channels_up = true;
       while channels_up {
-        channels_up = self.check_event_stream();
+        channels_up = self.check_event_stream() && self.check_build_stream();
         thread::sleep_ms(2000);
       }
     })
@@ -73,6 +76,18 @@ impl Commenter {
           },
           _ => ()
         }
+        true
+      }
+    }
+  }
+
+  pub fn check_build_stream(&mut self) -> bool {
+    let possible_event = self.build_rx.try_recv();
+
+    match possible_event {
+      Err(err) => !(err == TryRecvError::Disconnected),
+      Ok(res) => {
+        println!("CIRCLE: {:?}", res);
         true
       }
     }

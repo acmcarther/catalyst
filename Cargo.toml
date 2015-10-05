@@ -17,6 +17,10 @@ rand = "*"
 git = "https://github.com/acmcarther/github_v3_rust"
 rev = "137f39fe57cefb634b7360793cd6872382d039f7"
 
+[dependencies.coffeelint_parser]
+git = "https://github.com/acmcarther/coffeelint_parser"
+rev = "49c309568637aa13c8c6a5d7420c14563c2e2dcd"
+
 [dev-dependencies.rusty-mock]
 git = "https://github.com/acmcarther/rusty-mock"
 rev = "30e3da6fa169afd1436fa522754a14187808a5a3"

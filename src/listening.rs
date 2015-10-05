@@ -17,6 +17,7 @@ use client_api;
 use webhooks;
 
 use types::HandledGithubEvents;
+use continuous_integrator::types::Build;
 
 fn serve_file(file_path: &str) -> Result<String, IoError> {
   let mut s = String::new();
@@ -37,6 +38,7 @@ fn handle_root(_: &mut Request) -> IronResult<Response> {
 
 pub fn spawn_listener(
   event_tx: Sender<HandledGithubEvents>,
+  build_tx: Sender<Build>,
   ) -> Iron<Mount> {
 
   let mut router = Router::new();
@@ -44,6 +46,7 @@ pub fn spawn_listener(
 
   mount.mount("/api_v1/", client_api::get_api_handler());
   mount.mount("/github_webhooks", webhooks::github_webhook_handler(event_tx));
+  mount.mount("/circle_webhooks", webhooks::circle_webhook_handler(build_tx));
   mount.mount("/assets/", Static::new(Path::new("client/dist/")));
   router.get("/", handle_root);
   mount.mount("/", router);
