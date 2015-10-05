@@ -19,7 +19,7 @@ rev = "137f39fe57cefb634b7360793cd6872382d039f7"
 
 [dependencies.coffeelint_parser]
 git = "https://github.com/acmcarther/coffeelint_parser"
-rev = "49c309568637aa13c8c6a5d7420c14563c2e2dcd"
+rev = "40349a53210c4c68414c7c19f0b0e56105a6ef19"
 
 [dev-dependencies.rusty-mock]
 git = "https://github.com/acmcarther/rusty-mock"
